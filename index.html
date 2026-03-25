@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#f7f5f0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzJhMjYyMCIvPgogIDxyZWN0IHg9IjUiIHk9IjkiIHdpZHRoPSIyMiIgaGVpZ2h0PSIxOCIgcng9IjMiIGZpbGw9IiNjODg2MGEiLz4KICA8cmVjdCB4PSI1IiB5PSI5IiB3aWR0aD0iMjIiIGhlaWdodD0iNyIgcng9IjMiIGZpbGw9IiNlOGEwMjAiLz4KICA8cmVjdCB4PSI1IiB5PSIxMyIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMiIGZpbGw9IiNlOGEwMjAiLz4KICA8bGluZSB4MT0iMTAiIHkxPSI2IiB4Mj0iMTAiIHkyPSIxMiIgc3Ryb2tlPSIjMmEyNjIwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjIyIiB5MT0iNiIgeDI9IjIyIiB5Mj0iMTIiIHN0cm9rZT0iIzJhMjYyMCIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxyZWN0IHg9IjgiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMTQiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC41Ii8+Cjwvc3ZnPg==">
+<title>Worship Service Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: 'SSNicksonOne';
+  src: url('fonts/S&S Nickson One.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+</style>
+<style>
+:root{
+  --bg:#f7f5f0;--bg2:#eeeae2;--bg3:#e4dfd5;
+  --card:#ffffff;--card2:#faf8f5;
+  --border:#ddd8ce;--border2:#c8c2b6;
+  --ink:#2a2620;--ink2:#5a5248;--ink3:#9a9088;
+  --amber:#c8860a;--amber-bg:#fef3dc;--amber-dim:rgba(200,134,10,0.12);
+  --green:#2d7a4f;--green-bg:#eaf5ef;--green-dim:rgba(45,122,79,0.12);
+  --red:#c0392b;--red-bg:#fdecea;
+  --teal:#1a7a7a;--blue:#2563a8;--blue-bg:#e8f0fb;
+  --sidebar:220px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:14px;line-height:1.5}
+.shell{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar);flex-shrink:0;background:var(--ink);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100}
+.sidebar-brand{padding:28px 20px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.brand-cross{font-size:18px;color:var(--amber);text-shadow:0 0 12px rgba(200,134,10,0.5);margin-bottom:8px;display:block}
+.brand-name{font-family:'SSNicksonOne','Lora',serif;font-size:16px;font-weight:600;color:#fff;line-height:1.2}
+.brand-name span{color:var(--amber)}
+.brand-sub{font-size:10px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px}
+.sidebar-nav{flex:1;padding:16px 0}
+.nav-section{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:12px 20px 6px}
+.nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:10px 20px;border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,0.5);text-align:left;transition:all 0.15s;border-left:2px solid transparent}
+.nav-btn:hover{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.04)}
+.nav-btn.active{color:#fff;background:rgba(255,255,255,0.07);border-left-color:var(--amber)}
+.nav-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.sidebar-foot{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:rgba(255,255,255,0.22);line-height:1.7}
+.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.page-title{font-family:'SSNicksonOne','Lora',serif;font-size:25px;font-weight:600;color:var(--ink)}
+.topbar-right{font-size:12px;color:var(--ink3);text-align:right;line-height:1.7}
+.topbar-right strong{color:var(--ink2);font-weight:600}
+.content{padding:28px 32px;flex:1}
+.page{display:none}.page.active{display:block}
+.slabel{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink3);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
+.slabel::after{content:'';flex:1;height:1px;background:var(--border)}
+.slabel:first-child{margin-top:0}
+.stats{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;flex:1;min-width:110px}
+.stat-n{font-size:28px;font-weight:600;color:var(--amber);line-height:1;font-family:'Lora',serif}
+.stat-l{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px;font-weight:500}
+.this-week{background:var(--green-bg);border:1px solid rgba(45,122,79,0.2);border-radius:14px;padding:18px 20px;margin-bottom:20px}
+.tw-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.tw-date{font-family:'SSNicksonOne','Lora',serif;font-size:16px;font-weight:600;color:var(--green)}
+.tw-badge{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;background:var(--green-dim);color:var(--green);border:1px solid rgba(45,122,79,0.25);padding:3px 10px;border-radius:20px}
+.tw-msg{font-size:13px;color:var(--ink2);font-style:italic;margin-bottom:14px;line-height:1.4}
+.tw-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tw-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);margin-bottom:4px}
+.tw-val{font-size:13px;font-weight:500;color:var(--ink)}
+.tw-meta{font-size:11px;color:var(--ink3);margin-top:2px}
+.swatches{display:flex;gap:3px;margin-top:4px}
+.sw{border-radius:3px;border:1px solid rgba(0,0,0,0.1)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.chip{font-size:12px;font-weight:500;padding:5px 14px;border-radius:20px;border:1px solid var(--border2);color:var(--ink3);background:var(--card);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
+.chip:hover{border-color:var(--amber);color:var(--amber)}
+.chip.active{background:var(--amber-bg);color:var(--amber);border-color:rgba(200,134,10,0.4)}
+.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
+table.svc{width:100%;border-collapse:collapse}
+table.svc th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);background:var(--bg2);white-space:nowrap}
+.svc-row{border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s}
+.svc-row:hover,.svc-row.open{background:var(--bg2)}
+.svc-row td{padding:11px 14px;font-size:13px;vertical-align:middle}
+.td-date{font-weight:600;color:var(--amber);font-size:12px;white-space:nowrap}
+.td-title{font-weight:500;color:var(--ink);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.td-title.empty{color:var(--ink3);font-style:italic;font-weight:400}
+.td-song{color:var(--ink2);font-size:12px}
+.td-pad{color:var(--teal);font-size:12px;font-weight:500}
+.td-outfit{display:flex;align-items:center;gap:5px}
+.pill{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap}
+.pill-confirmed{background:var(--green-bg);color:var(--green);border:1px solid rgba(45,122,79,0.2)}
+.pill-upcoming{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(200,134,10,0.2)}
+.pill-draft{background:var(--bg2);color:var(--ink3);border:1px solid var(--border)}
+.next-tag{font-size:9px;font-weight:600;padding:2px 6px;border-radius:6px;background:var(--amber-bg);color:var(--amber);border:1px solid rgba(200,134,10,0.3);text-transform:uppercase;letter-spacing:0.05em;margin-left:5px}
+.exp-row{display:none}
+.exp-row.open{display:table-row}
+.exp-row td{padding:0}
+.exp-inner{padding:16px 20px;background:var(--card2);border-bottom:2px solid var(--border)}
+.exp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:14px}
+.exp-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.09em;color:var(--ink3);margin-bottom:5px}
+.exp-val{font-size:13px;color:var(--ink);font-weight:500}
+.exp-val.empty{color:var(--ink3);font-style:italic;font-weight:400}
+.exp-meta{font-size:11px;color:var(--ink3);margin-top:2px}
+.exp-meta strong{color:var(--ink2)}
+.exp-sel,.exp-inp{width:100%;font-size:12px;padding:7px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--card);color:var(--ink);font-family:'Inter',sans-serif;margin-top:4px}
+.exp-inp::placeholder{color:var(--ink3)}
+.exp-sel:focus,.exp-inp:focus{outline:none;border-color:var(--amber)}
+.exp-actions{display:flex;gap:8px;border-top:1px solid var(--border);padding-top:12px}
+.exp-btn{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid var(--border2);background:var(--card);color:var(--ink2);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
+.exp-btn:hover{background:var(--bg2)}
+.exp-btn.primary{background:var(--amber-bg);color:var(--amber);border-color:rgba(200,134,10,0.35)}
+.exp-btn.danger{color:var(--red);border-color:rgba(192,57,43,0.2)}
+.exp-btn.danger:hover{background:var(--red-bg)}
+.list-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px}
+.list-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border);transition:background 0.1s}
+.list-row:last-child{border-bottom:none}
+.list-row:hover{background:var(--bg2)}
+.row-rank{width:22px;height:22px;border-radius:50%;background:var(--amber-bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--amber);flex-shrink:0}
+.row-info{flex:1;min-width:0}
+.row-name{font-size:13px;font-weight:500;color:var(--ink)}
+.row-last{font-size:11px;color:var(--ink3);margin-top:2px}
+.row-last strong{color:var(--ink2);font-weight:600}
+.row-badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;background:var(--blue-bg);color:var(--blue);flex-shrink:0}
+.pad-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.add-bar{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.add-bar input{flex:1;font-size:13px;padding:7px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif}
+.add-bar input::placeholder{color:var(--ink3)}
+.add-bar input:focus{outline:none;border-color:var(--amber)}
+.narrow{max-width:80px!important;flex:none!important}
+.add-btn{font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;border:1px solid rgba(200,134,10,0.4);background:var(--amber-bg);color:var(--amber);cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all 0.15s}
+.add-btn:hover{background:rgba(200,134,10,0.2)}
+.outfit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:20px}
+.outfit-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;transition:border-color 0.15s}
+.outfit-card:hover{border-color:var(--border2)}
+.outfit-swatches{display:flex;gap:4px;margin-bottom:10px}
+.outfit-swatch{width:24px;height:24px;border-radius:6px;border:1px solid rgba(0,0,0,0.1)}
+.outfit-name{font-size:13px;font-weight:500;color:var(--ink);line-height:1.3;margin-bottom:4px}
+.outfit-last{font-size:11px;color:var(--ink3)}
+.outfit-last strong{color:var(--ink2)}
+.outfit-count{font-size:11px;color:var(--ink3);margin-top:2px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:580px}
+.panel h3{font-family:'Lora',serif;font-size:17px;color:var(--ink);margin-bottom:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.frow{margin-bottom:14px}
+.frow.full{grid-column:1/-1}
+.flbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.09em;color:var(--ink3);margin-bottom:6px}
+.finput{width:100%;font-size:13px;padding:9px 12px;border:1px solid var(--border2);border-radius:9px;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;transition:border-color 0.15s}
+.finput:focus{outline:none;border-color:var(--amber)}
+.finput::placeholder{color:var(--ink3)}
+.save-btn{padding:10px 28px;border-radius:9px;font-size:13px;font-weight:600;border:none;background:var(--amber);color:#fff;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.15s}
+.save-btn:hover{opacity:0.9}
+.info-note{font-size:12px;color:var(--ink3);line-height:1.6;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:500;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
+@media(max-width:800px){
+  .sidebar{width:100%;height:auto;position:fixed;top:auto;bottom:0;left:0;right:0;flex-direction:row;border-top:1px solid rgba(255,255,255,0.1)}
+  .sidebar-brand,.sidebar-foot,.nav-section{display:none}
+  .sidebar-nav{display:flex;flex-direction:row;padding:0;width:100%}
+  .nav-btn{flex-direction:column;gap:3px;padding:8px 4px;font-size:9px;text-align:center;border-left:none;border-top:2px solid transparent;justify-content:center}
+  .nav-btn.active{border-top-color:var(--amber);border-left:none}
+  .nav-btn svg{width:20px;height:20px}
+  .main{margin-left:0;margin-bottom:58px}
+  .topbar{padding:12px 16px}
+  .content{padding:14px 16px}
+  .tw-grid{grid-template-columns:1fr 1fr}
+  .exp-grid{grid-template-columns:1fr 1fr}
+  .outfit-grid{grid-template-columns:1fr 1fr}
+  .form-grid{grid-template-columns:1fr}
+  table.svc thead{display:none}
+  table.svc,table.svc tbody,.svc-row,.svc-row td{display:block;width:100%}
+  .svc-row{border-radius:10px;border:1px solid var(--border);margin-bottom:8px;background:var(--card)}
+  .svc-row td{padding:5px 12px;border:none}
+  .svc-row td:first-child{padding-top:11px}
+  .svc-row td:last-child{padding-bottom:11px}
+  .exp-row,.exp-row td{display:block!important}
+  .tbl-wrap{border:none;border-radius:0}
+  .stats{gap:8px}
+}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <span class="brand-cross">&#10013;</span>
+    <div class="brand-name">Peace Church <span>Online</span></div>
+    <div class="brand-sub">Worship Service Planner</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Planning</div>
+    <button class="nav-btn active" id="nav-planner" onclick="showPage('planner',this)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Planner
+    </button>
+    <button class="nav-btn" id="nav-add" onclick="showPage('add',this)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Add Service
+    </button>
+    <div class="nav-section">Libraries</div>
+    <button class="nav-btn" id="nav-songs" onclick="showPage('songs',this)">
+      <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Songs
+    </button>
+    <button class="nav-btn" id="nav-pads" onclick="showPage('pads',this)">
+      <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="5"/><path d="M3 12v5c0 2.76 4.03 5 9 5s9-2.24 9-5v-5"/></svg>Pads
+    </button>
+    <button class="nav-btn" id="nav-outfits" onclick="showPage('outfits',this)">
+      <svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>Outfits
+    </button>
+  </nav>
+  <div class="sidebar-foot">Peace Church Online<br>Worship Planning Tool</div>
+</aside>
+<div class="main">
+  <div class="topbar">
+    <div><div class="page-title">Worship Service Planner</div><div style="font-size:11px;color:var(--ink3);margin-top:1px" id="page-title">Planner</div></div>
+    <div class="topbar-right">Next service<br><strong id="topbar-next">&#8212;</strong></div>
+  </div>
+  <div class="content">
+    <div class="page active" id="page-planner">
+      <div class="stats">
+        <div class="stat"><div class="stat-n" id="s-total">0</div><div class="stat-l">Services</div></div>
+        <div class="stat"><div class="stat-n" id="s-conf">0</div><div class="stat-l">Confirmed</div></div>
+        <div class="stat"><div class="stat-n" id="s-up">0</div><div class="stat-l">Upcoming</div></div>
+        <div class="stat"><div class="stat-n" id="s-songs">0</div><div class="stat-l">Songs</div></div>
+      </div>
+      <div id="tw-el"></div>
+      <div style="background:var(--teal-bg);border:1px solid rgba(26,122,122,0.2);border-radius:14px;padding:14px 16px;margin-bottom:16px" id="prayer-banner"></div>
+      <div class="chips">
+        <button class="chip active" onclick="filterSvc('all',this)">All</button>
+        <button class="chip" onclick="filterSvc('upcoming',this)">Upcoming</button>
+        <button class="chip" onclick="filterSvc('confirmed',this)">Confirmed</button>
+        <button class="chip" onclick="filterSvc('draft',this)">Draft</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="svc"><thead><tr>
+          <th>Date</th><th>Message</th><th>Song 1</th><th>Song 2</th><th>Pad</th><th>Outfit</th><th>Status</th>
+        </tr></thead><tbody id="svc-body"></tbody></table>
+      </div>
+    </div>
+    <div class="page" id="page-add">
+      <div class="panel"><h3>New service</h3>
+        <div class="form-grid">
+          <div class="frow"><div class="flbl">Date</div><input class="finput" type="date" id="ns-date"/></div>
+          <div class="frow"><div class="flbl">Status</div><select class="finput" id="ns-status"><option value="upcoming">Upcoming</option><option value="confirmed">Confirmed</option><option value="draft">Draft</option></select></div>
+          <div class="frow full"><div class="flbl">Message title</div><input class="finput" id="ns-title" placeholder="Optional"/></div>
+          <div class="frow"><div class="flbl">Song 1</div><select class="finput" id="ns-s1"></select></div>
+          <div class="frow"><div class="flbl">Song 2</div><select class="finput" id="ns-s2"></select></div>
+          <div class="frow"><div class="flbl">Pad</div><select class="finput" id="ns-pad"></select></div>
+          <div class="frow"><div class="flbl">Outfit</div><select class="finput" id="ns-outfit"></select></div>
+        </div>
+        <button class="save-btn" onclick="saveService()">Save Service</button>
+      </div>
+    </div>
+    <div class="page" id="page-songs">
+      <div class="slabel">Top suggestions</div>
+      <div class="list-card" id="song-suggests"></div>
+      <div class="slabel">Full library</div>
+      <div class="add-bar"><input id="new-song" placeholder="Song title"/><input id="new-key" placeholder="Key" class="narrow"/><select id="new-role" style="font-size:12px;padding:7px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif"><option value="opener">Opener</option><option value="closer">Closer</option></select><button class="add-btn" onclick="addSong()">+ Add</button></div>
+      <div class="list-card" id="song-list"></div>
+    </div>
+    <div class="page" id="page-pads">
+      <div class="slabel">Pad suggestions</div>
+      <div class="info-note">Sorted by last use. Pick based on the feel of the week.</div>
+      <div class="list-card" id="pad-suggests"></div>
+      <div class="slabel">Full library</div>
+      <div class="add-bar"><input id="new-pad" placeholder="Pad name"/><button class="add-btn" onclick="addPad()">+ Add</button></div>
+      <div class="list-card" id="pad-list"></div>
+    </div>
+    <div class="page" id="page-outfits">
+      <div class="slabel">Outfit rotation</div>
+      <div class="info-note">Sorted by least recently worn. Swatches show the main colours. "Over tee" = overshirt worn open. "Shacket" = oversized shirt worn like a jacket.</div>
+      <div class="outfit-grid" id="outfit-grid"></div>
+      <div class="slabel">Add new outfit</div>
+      <div class="panel" style="max-width:500px"><h3>New outfit</h3>
+        <div class="form-grid">
+          <div class="frow full"><div class="flbl">Description</div><input class="finput" id="no-name" placeholder="e.g. Denim Jacket Over Black Tee"/></div>
+          <div class="frow"><div class="flbl">Colour 1</div><input class="finput" type="color" id="no-c1" value="#1a1a1a"/></div>
+          <div class="frow"><div class="flbl">Colour 2 (optional)</div><input class="finput" type="color" id="no-c2" value="#ffffff"/></div>
+          <div class="frow"><div class="flbl">Colour 3 (optional)</div><input class="finput" type="color" id="no-c3" value="#ffffff"/></div>
+          <div class="frow"><div class="flbl">How many colours?</div><select class="finput" id="no-nc"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></div>
+        </div>
+        <button class="save-btn" onclick="addOutfit()">Add Outfit</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+
+const DS=[{"title":"All Hail King Jesus","key":"E","last":"2026-03-08","role":"opener"},{"title":"Son of Suffering","key":"B","last":"2026-02-08","role":"opener"},{"title":"Living Hope","key":"B","last":"2026-03-15","role":"opener"},{"title":"I Speak Jesus","key":"D","last":"2026-02-22","role":"opener"},{"title":"I Love You Lord","key":"G","last":"2026-02-22","role":"closer"},{"title":"Time and Time Again","key":"C","last":"2026-03-22","role":"opener"},{"title":"Goodness of God","key":"B","last":"2026-03-22","role":"closer"},{"title":"My King Forever","key":"A","last":"2026-03-01","role":"opener"},{"title":"Open My Eyes Lord","key":"G","last":"2026-03-01","role":"closer"},{"title":"Way Maker","key":"B","last":"2026-03-08","role":"closer"},{"title":"Be Thou My Vision","key":"D","last":"2025-09-28","role":"closer"},{"title":"Be Enthroned","key":"E","last":"2026-02-01","role":"opener"},{"title":"Doxology","key":"G","last":"2025-11-17","role":"closer"},{"title":"There Is None Like You","key":"E","last":"2026-03-15","role":"closer"},{"title":"More Precious Than Silver","key":"G","last":"2025-11-21","role":"closer"},{"title":"Open the Eyes of my Heart","key":"E","last":"2025-10-26","role":"closer"},{"title":"Our King Jesus","key":"C","last":"2026-02-15","role":"opener"},{"title":"Give Thanks","key":"D","last":"2026-02-15","role":"closer"},{"title":"Oh Come Let Us Adore Him","key":"G","last":"2025-12-14","role":"opener"},{"title":"Oh Holy Night","key":"C","last":"2025-12-14","role":"closer"}];
+const DP=[{"name": "Soft Piano", "last": "2025-09-28"}, {"name": "Presence", "last": "2025-10-12"}, {"name": "Mellow Piano", "last": "2025-11-17"}, {"name": "Anew", "last": "2026-02-01"}, {"name": "Belonging", "last": "2026-03-22"}, {"name": "Adoration", "last": "2026-03-01"}, {"name": "Hopeful", "last": "2026-03-08"}, {"name": "Eternal", "last": "2026-03-15"}];
+const DO=[{"name": "Denim Jacket Over Black", "colors": ["#5b7fa6", "#1a1a1a"], "last": "2026-02-08"}, {"name": "Dark Grey Shacket Over Black Shirt", "colors": ["#4a4a4a", "#1a1a1a"], "last": "2025-09-07"}, {"name": "Blue And White Check Over White Tee", "colors": ["#4a7ab5", "#ffffff"], "last": "2026-03-08"}, {"name": "Red And Green And Blue Check", "colors": ["#c0392b", "#27ae60", "#2980b9"], "last": "2025-09-21"}, {"name": "Cream Shacket Over Black Tee", "colors": ["#e8dcc8", "#1a1a1a"], "last": "2025-10-05"}, {"name": "Blue Mini Check No White Shirt", "colors": ["#4a7ab5", "#e8e8e8"], "last": "2025-10-19"}, {"name": "Red And White Check Shirt", "colors": ["#c0392b", "#ffffff"], "last": "2026-02-01"}, {"name": "Denim Jacket Over White Shirt", "colors": ["#5b7fa6", "#ffffff"], "last": "2025-11-09"}, {"name": "Dark Green Linen Shirt Over White Tee", "colors": ["#2d6a4f", "#ffffff"], "last": "2026-02-15"}, {"name": "Dark Blue Light Blue Big Check", "colors": ["#1a3a5c", "#6699cc"], "last": "2025-11-30"}, {"name": "Green And White Check Over White Tee", "colors": ["#27ae60", "#ffffff"], "last": "2025-12-14"}, {"name": "Denim Jacket Over Yellow Tee", "colors": ["#5b7fa6", "#f1c40f"], "last": "2026-02-08"}, {"name": "Salmon Linen Shirt Over White Tee", "colors": ["#e07060", "#ffffff"], "last": "2026-02-22"}, {"name": "Cream Shacket Over Dusty Rose Tee", "colors": ["#e8dcc8", "#c9907a"], "last": "2026-03-01"}, {"name": "Blue Big Check Over White Tee", "colors": ["#2980b9", "#ffffff"], "last": "2026-03-08"}, {"name": "Blue Mini Check Over White Tee Shirt", "colors": ["#4a7ab5", "#ffffff"], "last": "2026-03-15"}, {"name": "Black Shirt", "colors": ["#1a1a1a"], "last": "2026-03-22"}];
+const DV=[{"date":"2025-08-10","title":"How Online Church Can Be Real For You","song1":"All Hail King Jesus","song2":"Doxology","pad":"Soft Piano","outfit":"","status":"confirmed"},{"date":"2025-08-17","title":"More Happens At Church Than You Think","song1":"Son of Suffering","song2":"More Precious Than Silver","pad":"Hopeful","outfit":"","status":"confirmed"},{"date":"2025-08-24","title":"Is There More To Online Worship?","song1":"Living Hope","song2":"There Is None Like You","pad":"Presence","outfit":"Denim Jacket Over Black","status":"confirmed"},{"date":"2025-08-31","title":"Is Believing Enough? Why Jesus Calls Us To Follow","song1":"I Speak Jesus","song2":"I Love You Lord","pad":"Mellow Piano","outfit":"","status":"confirmed"},{"date":"2025-09-07","title":"Why The Process Matters More Than How Long It Takes","song1":"Time and Time Again","song2":"Goodness of God","pad":"Mellow Piano","outfit":"Dark Grey Shacket Over Black Shirt","status":"confirmed"},{"date":"2025-09-14","title":"How God Used Fishing To Teach Me About Faith","song1":"My King Forever","song2":"Open My Eyes Lord","pad":"Mellow Piano","outfit":"Blue And White Check Over White Tee","status":"confirmed"},{"date":"2025-09-21","title":"God Has Gone Before You","song1":"All Hail King Jesus","song2":"Way Maker","pad":"Hopeful","outfit":"Red And Green And Blue Check","status":"confirmed"},{"date":"2025-09-28","title":"Will God Give You What You Ask For?","song1":"Son of Suffering","song2":"Be Thou My Vision","pad":"Soft Piano","outfit":"","status":"confirmed"},{"date":"2025-10-05","title":"Encouragement","song1":"Be Enthroned","song2":"Doxology","pad":"Mellow Piano","outfit":"Cream Shacket Over Black Tee","status":"confirmed"},{"date":"2025-10-12","title":"Abraham Waited 20 Years - What Are You Waiting For?","song1":"Living Hope","song2":"There Is None Like You","pad":"Presence","outfit":"","status":"confirmed"},{"date":"2025-10-19","title":"Mind Your Mouth","song1":"I Speak Jesus","song2":"I Love You Lord","pad":"Mellow Piano","outfit":"Blue Mini Check No White Shirt","status":"confirmed"},{"date":"2025-10-26","title":"Who's Narrating Your Story?","song1":"My King Forever","song2":"Open the Eyes of my Heart","pad":"Adoration","outfit":"Red And White Check Shirt","status":"confirmed"},{"date":"2025-11-02","title":"Clear the Cache - Choose Mercy","song1":"Time and Time Again","song2":"Goodness of God","pad":"Adoration","outfit":"Blue And White Check Over White Tee","status":"confirmed"},{"date":"2025-11-09","title":"Mercy 2 - Others - Be A Neighbour","song1":"Our King Jesus","song2":"Give Thanks","pad":"Adoration","outfit":"Denim Jacket Over White Shirt","status":"confirmed"},{"date":"2025-11-17","title":"What Does God Want Me To Do?","song1":"All Hail King Jesus","song2":"Doxology","pad":"Mellow Piano","outfit":"","status":"confirmed"},{"date":"2025-11-21","title":"The Assumption Many Christians Make","song1":"Son of Suffering","song2":"More Precious Than Silver","pad":"Hopeful","outfit":"Dark Green Linen Shirt Over White Tee","status":"confirmed"},{"date":"2025-11-30","title":"Does Jesus Know You?","song1":"Living Hope","song2":"There Is None Like You","pad":"Anew","outfit":"Dark Blue Light Blue Big Check","status":"confirmed"},{"date":"2025-12-07","title":"Will God Give You A Christmas Gift?","song1":"Oh Come Let Us Adore Him","song2":"Oh Holy Night","pad":"Adoration","outfit":"","status":"confirmed"},{"date":"2025-12-14","title":"Peace Flowing Through You","song1":"Oh Come Let Us Adore Him","song2":"Oh Holy Night","pad":"Anew","outfit":"Green And White Check Over White Tee","status":"confirmed"},{"date":"2026-02-01","title":"Don't Send Them To TikTok","song1":"Be Enthroned","song2":"Open My Eyes Lord","pad":"Anew","outfit":"Red And White Check Shirt","status":"confirmed"},{"date":"2026-02-08","title":"Why Good Deeds Matter and When They Don't","song1":"Son of Suffering","song2":"There Is None Like You","pad":"Adoration","outfit":"Denim Jacket Over Yellow Tee","status":"confirmed"},{"date":"2026-02-15","title":"The Kindness Method | How Kindness Actually Changes People","song1":"Our King Jesus","song2":"Give Thanks","pad":"Eternal","outfit":"Dark Green Linen Shirt Over White Tee","status":"confirmed"},{"date":"2026-02-22","title":"The Love Test | Do You Really Love God","song1":"I Speak Jesus","song2":"I Love You Lord","pad":"Belonging","outfit":"Salmon Linen Shirt Over White Tee","status":"confirmed"},{"date":"2026-03-01","title":"A Bigger Love: How The Holy Spirit Enables Us to be One","song1":"My King Forever","song2":"Open My Eyes Lord","pad":"Adoration","outfit":"Cream Shacket Over Dusty Rose Tee","status":"confirmed"},{"date":"2026-03-08","title":"No Ego Love: Look to the Interests of Others","song1":"All Hail King Jesus","song2":"Way Maker","pad":"Hopeful","outfit":"Blue Big Check Over White Tee","status":"confirmed"},{"date":"2026-03-15","title":"Perfect Love Casts Out Fear","song1":"Living Hope","song2":"There Is None Like You","pad":"Eternal","outfit":"Blue Mini Check Over White Tee Shirt","status":"confirmed"},{"date":"2026-03-22","title":"How Love For Leaders Goes Deeper Than Respect","song1":"Time and Time Again","song2":"Goodness of God","pad":"Belonging","outfit":"Black Shirt","status":"confirmed"},{"date":"2026-03-29","title":"","song1":"","song2":"","pad":"","outfit":"Red And Green And Blue Check","status":"upcoming"},{"date":"2026-04-05","title":"","song1":"","song2":"","pad":"","outfit":"","status":"upcoming"},{"date":"2026-04-12","title":"","song1":"","song2":"","pad":"","outfit":"","status":"upcoming"},{"date":"2026-04-19","title":"","song1":"","song2":"","pad":"","outfit":"","status":"upcoming"},{"date":"2026-04-26","title":"","song1":"","song2":"","pad":"","outfit":"","status":"upcoming"}];
+const PRAYERS=[
+  "The Body of Christ",
+  "Friends and Family",
+  "Leaders In Authority",
+  "The Nations",
+  "Peace Church Online Prayer Requests"
+];
+
+// Last known prayer was "The Nations" on 2026-03-22 (index 3)
+const DEFAULT_PRAYER_IDX=3;
+
+function getLastPrayerIdx(){
+  return parseInt(localStorage.getItem('pcow_last_prayer_idx')||DEFAULT_PRAYER_IDX);
+}
+function getNextPrayer(){
+  const last=getLastPrayerIdx();
+  return PRAYERS[(last+1)%PRAYERS.length];
+}
+function getNextPrayerIdx(){
+  const last=getLastPrayerIdx();
+  return (last+1)%PRAYERS.length;
+}
+function confirmPrayer(){
+  localStorage.setItem('pcow_last_prayer_idx', getNextPrayerIdx());
+  renderPrayerBanner();
+  renderTW();
+  toast('Prayer confirmed — rotation updated');
+}
+function renderPrayerBanner(){
+  const el=document.getElementById('prayer-banner');
+  if(!el)return;
+  const next=getNextPrayer();
+  const last=PRAYERS[getLastPrayerIdx()];
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal)">&#9654; Prayer Focus</span>
+      <span style="font-size:11px;color:var(--ink3)">Last week: ${last}</span>
+    </div>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+      <div>
+        <div style="font-size:16px;font-weight:600;color:var(--ink)">${next}</div>
+        <div style="font-size:11px;color:var(--ink3);margin-top:2px">${PRAYERS.map((p,i)=>`<span style="opacity:${getNextPrayerIdx()===i?1:0.35};font-weight:${getNextPrayerIdx()===i?600:400}">${i+1}</span>`).join(' · ')}</div>
+      </div>
+      <button onclick="confirmPrayer()" style="font-size:11px;font-weight:600;padding:6px 14px;border-radius:8px;border:1px solid rgba(26,122,122,0.3);background:var(--teal-bg);color:var(--teal);cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap">Mark as done</button>
+    </div>`;
+}
+
+function ld(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+let songs=ld('pcow_songs',DS),pads=ld('pcow_pads',DP),outfits=ld('pcow_outfits',DO),services=ld('pcow_services',DV);
+function persist(){sv('pcow_songs',songs);sv('pcow_pads',pads);sv('pcow_outfits',outfits);sv('pcow_services',services);}
+const MO=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+function fmt(d){if(!d)return'\u2014';const[y,m,day]=d.split('-');return`${parseInt(day)} ${MO[parseInt(m)-1]} ${y}`;}
+function fmtS(d){if(!d)return'\u2014';const[y,m,day]=d.split('-');return`${parseInt(day)} ${MO[parseInt(m)-1]}`;}
+function ago(d){if(!d)return'';const w=Math.floor((Date.now()-new Date(d))/(1000*60*60*24*7));if(w<=0)return'this week';if(w===1)return'1 wk ago';if(w<5)return w+' wks ago';const mo=Math.floor(w/4.33);if(mo<12)return mo<=1?'1 mo ago':mo+' mo ago';const yr=Math.floor(mo/12);return yr===1?'1 yr ago':yr+' yrs ago';}
+function td(){return new Date().toISOString().split('T')[0];}
+function gS(t){return songs.find(s=>s.title===t);}
+function gP(n){return pads.find(p=>p.name===n);}
+function gO(n){return outfits.find(o=>o.name===n);}
+function sw(colors,sz){return(colors||[]).map(c=>`<div class="sw" style="width:${sz}px;height:${sz}px;background:${c};border-radius:${Math.floor(sz/4)}px"></div>`).join('');}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;');}
+function sOpts(sel){return'<option value="">\u2014 none \u2014</option>'+[...songs].sort((a,b)=>a.title.localeCompare(b.title)).map(s=>`<option value="${esc(s.title)}"${sel===s.title?' selected':''}>${esc(s.title)}</option>`).join('');}
+function pOpts(sel){return'<option value="">\u2014 none \u2014</option>'+[...pads].sort((a,b)=>new Date(a.last)-new Date(b.last)).map(p=>`<option value="${esc(p.name)}"${sel===p.name?' selected':''}>${esc(p.name)}</option>`).join('');}
+function oOpts(sel){return'<option value="">\u2014 none \u2014</option>'+outfits.map(o=>`<option value="${esc(o.name)}"${sel===o.name?' selected':''}>${esc(o.name)}</option>`).join('');}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
+function renderTopbar(){const n=[...services].filter(s=>s.status==='upcoming'&&s.date>=td()).sort((a,b)=>a.date.localeCompare(b.date))[0];document.getElementById('topbar-next').textContent=n?fmt(n.date):'\u2014';}
+function renderTW(){
+  const past=[...services].filter(s=>s.status==='confirmed'&&s.date<=td()).sort((a,b)=>b.date.localeCompare(a.date));
+  const svc=past[0];const el=document.getElementById('tw-el');
+  if(!svc){el.innerHTML='';return;}
+  const s1=gS(svc.song1),s2=gS(svc.song2),ot=gO(svc.outfit);
+  const nextPrayer=getNextPrayer();
+  el.innerHTML=`<div class="this-week"><div class="tw-hdr"><div class="tw-date">${fmt(svc.date)}</div><span class="tw-badge">\u2713 Confirmed</span></div>${svc.title?`<div class="tw-msg">"${svc.title}"</div>`:''}<div class="tw-grid"><div><div class="tw-lbl">Song 1</div><div class="tw-val">${svc.song1||'\u2014'}</div>${s1?`<div class="tw-meta">prev. ${fmtS(s1.last)}</div>`:''}</div><div><div class="tw-lbl">Song 2</div><div class="tw-val">${svc.song2||'\u2014'}</div>${s2?`<div class="tw-meta">prev. ${fmtS(s2.last)}</div>`:''}</div><div><div class="tw-lbl">Pad</div><div class="tw-val">${svc.pad||'\u2014'}</div></div><div><div class="tw-lbl">Outfit</div><div class="tw-val">${svc.outfit||'\u2014'}</div>${ot?`<div class="swatches">${sw(ot.colors,14)}</div>`:''}</div><div><div class="tw-lbl">Prayer</div><div class="tw-val">${nextPrayer}</div></div></div></div>`;
+}
+function renderStats(){document.getElementById('s-total').textContent=services.length;document.getElementById('s-conf').textContent=services.filter(s=>s.status==='confirmed').length;document.getElementById('s-up').textContent=services.filter(s=>s.status==='upcoming').length;document.getElementById('s-songs').textContent=songs.length;}
+let openR=new Set(),svcF='all';
+function filterSvc(f,btn){svcF=f;document.querySelectorAll('.chips .chip').forEach(c=>c.classList.remove('active'));btn.classList.add('active');renderTable();}
+function suggest(){
+  const byDate=(a,b)=>new Date(a.last)-new Date(b.last);
+  const outfitByDate=(a,b)=>{if(!a.last&&!b.last)return 0;if(!a.last)return-1;if(!b.last)return 1;return new Date(a.last)-new Date(b.last);};
+  // Openers for Song 1, closers for Song 2 — fallback to any if role not set
+  const openers=[...songs].filter(s=>s.role==='opener'||!s.role).sort(byDate);
+  const closers=[...songs].filter(s=>s.role==='closer'||!s.role).sort(byDate);
+  const s1=openers[0]?.title||'';
+  const s2=closers[0]?.title||'';
+  const pad=[...pads].sort(byDate)[0]?.name||'';
+  const outfit=[...outfits].sort(outfitByDate)[0]?.name||'';
+  return {s1,s2,pad,outfit};
+}
+function autoFill(idx){
+  const svc=services[idx];
+  if(svc.status!=='upcoming')return;
+  const sg=suggest();
+  if(!svc.song1)svc.song1=sg.s1;
+  if(!svc.song2)svc.song2=sg.s2;
+  if(!svc.pad)svc.pad=sg.pad;
+  if(!svc.outfit)svc.outfit=sg.outfit;
+  persist();
+}
+function renderTable(){
+  const now=td();
+  let data=[...services].sort((a,b)=>b.date.localeCompare(a.date));
+  if(svcF!=='all')data=data.filter(s=>s.status===svcF);
+  const nx=[...services].filter(s=>s.status==='upcoming'&&s.date>=now).sort((a,b)=>a.date.localeCompare(b.date))[0];
+  document.getElementById('svc-body').innerHTML=data.map(svc=>{
+    const idx=services.indexOf(svc);
+    const isN=nx&&svc===nx;
+    const s1=gS(svc.song1),s2=gS(svc.song2),ot=gO(svc.outfit);
+    const pc=svc.status==='confirmed'?'pill-confirmed':svc.status==='upcoming'?'pill-upcoming':'pill-draft';
+    const io=openR.has(idx);
+    const main=`<tr class="svc-row${io?' open':''}" onclick="toggleR(${idx})"><td class="td-date">${fmt(svc.date)}${isN?'<span class="next-tag">Next</span>':''}</td><td class="td-title${!svc.title?' empty':''}">${svc.title||'Title not set'}</td><td class="td-song">${svc.song1||'\u2014'}</td><td class="td-song">${svc.song2||'\u2014'}</td><td class="td-pad">${svc.pad||'\u2014'}</td><td><div class="td-outfit">${ot?sw(ot.colors,12):''}${svc.outfit?`<span style="font-size:11px;color:var(--ink2)">${svc.outfit.length>24?svc.outfit.slice(0,24)+'\u2026':svc.outfit}</span>`:'<span style=\"font-size:11px;color:var(--ink3)\">\u2014</span>'}</div></td><td><span class="pill ${pc}">${svc.status}</span></td></tr>`;
+    const song1block=svc.status==='upcoming'?`<select class="exp-sel" onchange="updS(${idx},'song1',this.value)">${sOpts(svc.song1)}</select>`:`<div class="exp-val${!svc.song1?' empty':''}">${svc.song1||'not set'}</div>${s1?`<div class="exp-meta">Last used: <strong>${fmt(s1.last)}</strong> \u00b7 ${ago(s1.last)}</div>`:''}`;
+    const song2block=svc.status==='upcoming'?`<select class="exp-sel" onchange="updS(${idx},'song2',this.value)">${sOpts(svc.song2)}</select>`:`<div class="exp-val${!svc.song2?' empty':''}">${svc.song2||'not set'}</div>${s2?`<div class="exp-meta">Last used: <strong>${fmt(s2.last)}</strong> \u00b7 ${ago(s2.last)}</div>`:''}`;
+    const padblock=svc.status==='upcoming'?`<select class="exp-sel" onchange="updS(${idx},'pad',this.value)">${pOpts(svc.pad)}</select>`:`<div class="exp-val${!svc.pad?' empty':''}">${svc.pad||'\u2014'}</div>`;
+    const outfitblock=svc.status==='upcoming'?`<select class="exp-sel" onchange="updS(${idx},'outfit',this.value)">${oOpts(svc.outfit)}</select>`:`<div class="exp-val${!svc.outfit?' empty':''}">${svc.outfit||'\u2014'}</div>${ot?`<div class="swatches" style="margin-top:5px">${sw(ot.colors,14)}</div>`:''}`;
+    const titleblock=svc.status==='upcoming'?`<div style="grid-column:1/-1"><div class="exp-lbl">Message title</div><input class="exp-inp" placeholder="Add title\u2026" value="${esc(svc.title||'')}" onchange="updS(${idx},'title',this.value)"/></div>`:'';
+    const confirmBtn=svc.status==='upcoming'?`<button class="exp-btn primary" onclick="confS(${idx},event)">\u2713 Confirm this week</button>`:svc.status==='confirmed'?`<button class="exp-btn" onclick="unconfS(${idx},event)">Move to upcoming</button>`:`<button class="exp-btn primary" onclick="confS(${idx},event)">\u2713 Confirm</button>`;
+    const exp=`<tr class="exp-row${io?' open':''}" id="er-${idx}"><td colspan="7"><div class="exp-inner"><div class="exp-grid"><div><div class="exp-lbl">Song 1</div>${song1block}</div><div><div class="exp-lbl">Song 2</div>${song2block}</div><div><div class="exp-lbl">Pad</div>${padblock}</div><div><div class="exp-lbl">Outfit</div>${outfitblock}</div>${titleblock}</div><div class="exp-actions">${confirmBtn}<button class="exp-btn danger" onclick="delS(${idx},event)">Delete</button></div></div></td></tr>`;
+    return main+exp;
+  }).join('');
+}
+function toggleR(i){if(openR.has(i)){openR.delete(i);}else{autoFill(i);openR.add(i);}renderTable();}
+function updS(i,f,v){services[i][f]=v;persist();}
+function confS(i,e){e.stopPropagation();const s=services[i];s.status='confirmed';if(s.song1){const x=gS(s.song1);if(x)x.last=s.date;}if(s.song2){const x=gS(s.song2);if(x)x.last=s.date;}if(s.pad){const x=gP(s.pad);if(x)x.last=s.date;}if(s.outfit){const x=gO(s.outfit);if(x)x.last=s.date;}persist();openR.delete(i);renderAll();toast('Confirmed \u2014 suggestions updated');}
+function unconfS(i,e){e.stopPropagation();services[i].status='upcoming';persist();renderAll();toast('Moved to upcoming');}
+function delS(i,e){e.stopPropagation();if(!confirm('Delete this service?'))return;services.splice(i,1);openR.clear();persist();renderAll();toast('Deleted');}
+function rolePill(r){
+  if(r==='opener')return'<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;background:#fff3e0;color:#c85000;border:1px solid rgba(200,80,0,0.2);margin-left:6px">Opener</span>';
+  if(r==='closer')return'<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;background:var(--blue-bg);color:var(--blue);border:1px solid rgba(37,99,168,0.2);margin-left:6px">Closer</span>';
+  return'';
+}
+function renderSongs(){
+  const byDate=(a,b)=>new Date(a.last)-new Date(b.last);
+  const openers=[...songs].filter(s=>s.role==='opener').sort(byDate);
+  const closers=[...songs].filter(s=>s.role==='closer').sort(byDate);
+  const allSorted=[...songs].sort(byDate);
+  document.getElementById('song-suggests').innerHTML=
+    '<div class="list-row" style="background:var(--bg2);padding:6px 16px"><span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3)">&#9654; Song 1 — Openers</span></div>'+
+    openers.slice(0,3).map((x,i)=>`<div class="list-row"><div class="row-rank">${i+1}</div><div class="row-info"><div class="row-name">${x.title}</div><div class="row-last">Last used: <strong>${fmt(x.last)}</strong> · ${ago(x.last)}</div></div><div class="row-badge">${x.key}</div></div>`).join('')+
+    '<div class="list-row" style="background:var(--bg2);padding:6px 16px"><span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3)">&#9654; Song 2 — Closers</span></div>'+
+    closers.slice(0,3).map((x,i)=>`<div class="list-row"><div class="row-rank">${i+1}</div><div class="row-info"><div class="row-name">${x.title}</div><div class="row-last">Last used: <strong>${fmt(x.last)}</strong> · ${ago(x.last)}</div></div><div class="row-badge">${x.key}</div></div>`).join('');
+  document.getElementById('song-list').innerHTML=allSorted.map(x=>`<div class="list-row"><div class="row-info"><div class="row-name">${x.title}${rolePill(x.role)}</div><div class="row-last">Last used: <strong>${fmt(x.last)}</strong> · ${ago(x.last)}</div></div><div class="row-badge">${x.key}</div></div>`).join('');
+}
+function addSong(){const t=document.getElementById('new-song').value.trim();const k=document.getElementById('new-key').value.trim().toUpperCase();const r=document.getElementById('new-role').value;if(!t)return;songs.push({title:t,key:k||'?',last:'2020-01-01',role:r});document.getElementById('new-song').value='';document.getElementById('new-key').value='';persist();renderSongs();toast('"'+t+'" added');}
+const PC=["#7c6aaa","#2d7a4f","#c06090","#c88010","#1a7a7a","#c05030","#2563a8","#7a4f2d"];
+function pColor(n){const i=pads.findIndex(p=>p.name===n);return PC[(i>=0?i:0)%PC.length];}
+function renderPads(){
+  const s=[...pads].sort((a,b)=>new Date(a.last)-new Date(b.last));
+  document.getElementById('pad-suggests').innerHTML=s.slice(0,5).map((p,i)=>`<div class="list-row"><div class="row-rank">${i+1}</div><div class="pad-dot" style="background:${pColor(p.name)}"></div><div class="row-info"><div class="row-name">${p.name}</div><div class="row-last">Last used: <strong>${fmt(p.last)}</strong> \u00b7 ${ago(p.last)}</div></div></div>`).join('');
+  document.getElementById('pad-list').innerHTML=s.map(p=>`<div class="list-row"><div class="pad-dot" style="background:${pColor(p.name)}"></div><div class="row-info"><div class="row-name">${p.name}</div><div class="row-last">Last used: <strong>${fmt(p.last)}</strong> \u00b7 ${ago(p.last)}</div></div></div>`).join('');
+}
+function addPad(){const n=document.getElementById('new-pad').value.trim();if(!n)return;pads.push({name:n,last:'2020-01-01'});document.getElementById('new-pad').value='';persist();renderPads();toast('"'+n+'" added');}
+function renderOutfits(){
+  const s=[...outfits].sort((a,b)=>{if(!a.last&&!b.last)return 0;if(!a.last)return-1;if(!b.last)return 1;return new Date(a.last)-new Date(b.last);});
+  const cnt=n=>services.filter(x=>x.outfit===n).length;
+  document.getElementById('outfit-grid').innerHTML=s.map(o=>`<div class="outfit-card"><div class="outfit-swatches">${o.colors.map(c=>`<div class="outfit-swatch" style="background:${c}"></div>`).join('')}</div><div class="outfit-name">${o.name}</div><div class="outfit-last">${o.last?`Last: <strong>${fmt(o.last)}</strong> \u00b7 ${ago(o.last)}`:'<span style=\"color:var(--ink3)\">Not tracked yet</span>'}</div><div class="outfit-count">Used ${cnt(o.name)}\u00d7</div></div>`).join('');
+}
+function addOutfit(){const name=document.getElementById('no-name').value.trim();if(!name)return;const nc=parseInt(document.getElementById('no-nc').value);const colors=[document.getElementById('no-c1').value];if(nc>=2)colors.push(document.getElementById('no-c2').value);if(nc>=3)colors.push(document.getElementById('no-c3').value);outfits.push({name,colors,last:''});document.getElementById('no-name').value='';persist();renderOutfits();toast('"'+name+'" added');}
+function populateAdd(){document.getElementById('ns-date').value=td();document.getElementById('ns-s1').innerHTML=sOpts('');document.getElementById('ns-s2').innerHTML=sOpts('');document.getElementById('ns-pad').innerHTML=pOpts('');document.getElementById('ns-outfit').innerHTML=oOpts('');}
+function saveService(){const date=document.getElementById('ns-date').value;if(!date){toast('Please pick a date');return;}const svc={date,title:document.getElementById('ns-title').value.trim(),song1:document.getElementById('ns-s1').value,song2:document.getElementById('ns-s2').value,pad:document.getElementById('ns-pad').value,outfit:document.getElementById('ns-outfit').value,status:document.getElementById('ns-status').value};if(svc.status==='confirmed'){if(svc.song1){const x=gS(svc.song1);if(x)x.last=date;}if(svc.song2){const x=gS(svc.song2);if(x)x.last=date;}if(svc.pad){const x=gP(svc.pad);if(x)x.last=date;}if(svc.outfit){const x=gO(svc.outfit);if(x)x.last=date;}}services.push(svc);services.sort((a,b)=>a.date.localeCompare(b.date));persist();document.getElementById('ns-title').value='';toast('Service saved');showPage('planner',document.getElementById('nav-planner'));renderAll();}
+const PT={planner:'Worship Service Planner',add:'Add Service',songs:'Songs',pads:'Pads',outfits:'Outfits'};
+function showPage(id,btn){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));document.getElementById('page-'+id).classList.add('active');btn.classList.add('active');document.getElementById('page-title').textContent=PT[id]||id;if(id==='add')populateAdd();}
+function renderAll(){renderTopbar();renderStats();renderTW();renderPrayerBanner();renderTable();renderSongs();renderPads();renderOutfits();}
+renderAll();
+
+</script>
+</body>
+</html>
