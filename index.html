@@ -280,10 +280,10 @@ table.svc th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:
     <!-- PLANNER -->
     <div class="page active" id="page-planner">
       <div class="stats">
-        <div class="stat"><div class="stat-n" id="s-total">&#8212;</div><div class="stat-l">Services</div></div>
-        <div class="stat"><div class="stat-n" id="s-conf">&#8212;</div><div class="stat-l">Confirmed</div></div>
+        <div class="stat"><div class="stat-n" id="s-conf">&#8212;</div><div class="stat-l">Services Held</div></div>
         <div class="stat"><div class="stat-n" id="s-up">&#8212;</div><div class="stat-l">Upcoming</div></div>
         <div class="stat"><div class="stat-n" id="s-songs">&#8212;</div><div class="stat-l">Songs</div></div>
+        <div class="stat"><div class="stat-n" id="s-total">&#8212;</div><div class="stat-l">Total Records</div></div>
       </div>
       <div id="tw-banner"></div>
       <div id="prayer-banner"></div>
@@ -318,6 +318,7 @@ table.svc th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:
           <div class="frow"><div class="flbl">Song 2 (closer)</div><select class="finput" id="ns-s2"></select></div>
           <div class="frow"><div class="flbl">Pad</div><select class="finput" id="ns-pad"></select></div>
           <div class="frow"><div class="flbl">Outfit</div><select class="finput" id="ns-outfit"></select></div>
+          <div class="frow"><div class="flbl">Prayer focus</div><select class="finput" id="ns-prayer"></select></div>
         </div>
         <button class="save-btn" id="save-svc-btn" onclick="saveService()">Save Service</button>
       </div>
@@ -447,6 +448,10 @@ function suggest(){
   };
 }
 
+function prayerOpts(sel){
+  const sorted=[...prayers].sort((a,b)=>a.sort_order-b.sort_order);
+  return'<option value="">— none —</option>'+sorted.map(p=>'<option value="'+esc(p.topic)+'"'+(sel===p.topic?' selected':'')+'>'+esc(p.topic)+'</option>').join('');
+}
 function songOpts(sel,role){
   const list=role?songs.filter(s=>s.role===role):songs;
   const sorted=[...list].sort((a,b)=>a.title.localeCompare(b.title));
@@ -555,9 +560,12 @@ function renderTable(){
     expHtml+='<div><div class="exp-lbl">Song 2</div>'+(svc.status==='upcoming'?'<select class="exp-sel" onchange="updateSvc(\''+svc.id+'\',\'song2\',this.value)">'+songOpts(svc.song2,'closer')+'</select>':'<div class="exp-val'+(svc.song2?'':' empty')+'">'+(svc.song2||'not set')+'</div>'+(s2?'<div class="exp-meta">Last used: <strong>'+fmt(s2.last_used)+'</strong> \u00b7 '+ago(s2.last_used)+'</div>':''))+'</div>';
     expHtml+='<div><div class="exp-lbl">Pad</div>'+(svc.status==='upcoming'?'<select class="exp-sel" onchange="updateSvc(\''+svc.id+'\',\'pad\',this.value)">'+padOpts(svc.pad)+'</select>':'<div class="exp-val'+(svc.pad?'':' empty')+'">'+(svc.pad||'\u2014')+'</div>')+'</div>';
     expHtml+='<div><div class="exp-lbl">Outfit</div>'+(svc.status==='upcoming'?'<select class="exp-sel" onchange="updateSvc(\''+svc.id+'\',\'outfit\',this.value)">'+outfitOpts(svc.outfit)+'</select>':'<div class="exp-val'+(svc.outfit?'':' empty')+'">'+(svc.outfit||'\u2014')+'</div>'+(ot?'<div class="swatches" style="margin-top:5px">'+swHtml(ot.colors,14)+'</div>':''))+'</div>';
-    if(svc.status==='upcoming'){expHtml+='<div style="grid-column:1/-1"><div class="exp-lbl">Message title</div><input class="exp-inp" placeholder="Add title\u2026" value="'+esc(svc.title||'')+'" onchange="updateSvc(\''+svc.id+'\',\'title\',this.value)"/></div>';}
-    expHtml+='</div><div class="exp-actions">';
-    if(svc.status==='upcoming')expHtml+='<button class="exp-btn primary" onclick="confirmSvc(\''+svc.id+'\',event)">\u2713 Confirm this week</button>';
+    if(svc.status==='upcoming'){expHtml+='<div style="grid-column:1/-1"><div class="exp-lbl">Message title</div><input class="exp-inp" placeholder="Add title\u2026" value="'+esc(svc.title||'')+'" onchange="updateSvc(\''+svc.id+'\',\'title\',this.value)"/></div>';
+expHtml+='<div style="grid-column:1/-1"><div class="exp-lbl">Prayer focus</div><select class="exp-sel" onchange="updateSvc(\''+svc.id+\',\'prayer\',this.value)">'+prayerOpts(svc.prayer)+'</select></div>';}
+    expHtml+='<div><div class="exp-lbl">Prayer</div>'+(svc.status==='upcoming'?'':(svc.prayer?'<div class="exp-val">'+esc(svc.prayer)+'</div>':'<div class="exp-val empty">not recorded</div>'))+'</div>';
+  expHtml+='</div><div class="exp-actions">';
+    if(svc.status==='upcoming')expHtml+='<button class="exp-btn primary" onclick="confirmSvc(\''+svc.id+'\',event)">✓ Confirm this week</button>';
+    else if(svc.status==='confirmed')expHtml+='<button class="exp-btn" onclick="editConfirmed(\''+svc.id+'\')">Edit</button>';
     else if(svc.status==='confirmed')expHtml+='<button class="exp-btn" onclick="unconfirmSvc(\''+svc.id+'\',event)">Move to upcoming</button>';
     else expHtml+='<button class="exp-btn primary" onclick="confirmSvc(\''+svc.id+'\',event)">\u2713 Confirm</button>';
     expHtml+='<button class="exp-btn danger" onclick="deleteSvc(\''+svc.id+'\',event)">Delete</button>';
@@ -567,6 +575,17 @@ function renderTable(){
   }).join('');
 }
 
+function editConfirmed(id){
+  const svc=services.find(s=>s.id===id);
+  if(!svc)return;
+  // Temporarily set to upcoming to enable edit fields, then re-confirm
+  svc._editing=true;
+  svc.status='upcoming';
+  renderTable();
+  openRows.add(id);
+  renderTable();
+  // Re-confirm button will save
+}
 function toggleRow(id){
   if(openRows.has(id))openRows.delete(id);else openRows.add(id);
   renderTable();
@@ -583,8 +602,13 @@ async function confirmSvc(id,e){
   e.stopPropagation();
   const svc=services.find(s=>s.id===id);
   if(!svc)return;
+  // If editing a confirmed service, just save without resetting
+  const wasEditing=svc._editing;
+  delete svc._editing;
   svc.status='confirmed';
-  const updates=[sb('services','PATCH',{status:'confirmed',title:svc.title,song1:svc.song1,song2:svc.song2,pad:svc.pad,outfit:svc.outfit},'id=eq.'+id)];
+  // Auto-fill prayer from suggestion if not already set
+  if(!svc.prayer){const np=getNextPrayer();if(np)svc.prayer=np.topic;}
+  const updates=[sb('services','PATCH',{status:'confirmed',title:svc.title,song1:svc.song1,song2:svc.song2,pad:svc.pad,outfit:svc.outfit,prayer:svc.prayer},'id=eq.'+id)];
   if(svc.song1){const s=getSong(svc.song1);if(s){s.last_used=svc.date;updates.push(sb('songs','PATCH',{last_used:svc.date},'id=eq.'+s.id));}}
   if(svc.song2){const s=getSong(svc.song2);if(s){s.last_used=svc.date;updates.push(sb('songs','PATCH',{last_used:svc.date},'id=eq.'+s.id));}}
   if(svc.pad){const p=getPad(svc.pad);if(p){p.last_used=svc.date;updates.push(sb('pads','PATCH',{last_used:svc.date},'id=eq.'+p.id));}}
@@ -722,12 +746,13 @@ function populateAddForm(){
   document.getElementById('ns-s2').innerHTML=songOpts('','closer');
   document.getElementById('ns-pad').innerHTML=padOpts('');
   document.getElementById('ns-outfit').innerHTML=outfitOpts('');
+  document.getElementById('ns-prayer').innerHTML=prayerOpts('');
 }
 
 async function saveService(){
   const date=document.getElementById('ns-date').value;
   if(!date){toast('Please pick a date');return;}
-  const svc={date,title:document.getElementById('ns-title').value.trim(),song1:document.getElementById('ns-s1').value,song2:document.getElementById('ns-s2').value,pad:document.getElementById('ns-pad').value,outfit:document.getElementById('ns-outfit').value,status:document.getElementById('ns-status').value};
+  const np=getNextPrayer();const svc={date,title:document.getElementById('ns-title').value.trim(),song1:document.getElementById('ns-s1').value,song2:document.getElementById('ns-s2').value,pad:document.getElementById('ns-pad').value,outfit:document.getElementById('ns-outfit').value,status:document.getElementById('ns-status').value,prayer:np?np.topic:''};
   const btn=document.getElementById('save-svc-btn');btn.disabled=true;
   try{
     if(svc.status==='confirmed'){
