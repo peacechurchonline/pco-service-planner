@@ -396,417 +396,567 @@ table.svc th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:
 
 <script>
 const SUPABASE_URL='https://zbrfermrflfctriyhqql.supabase.co';
-const SUPABASE_KEY='sb_publishable_3FBkq6SZljFQCYjLD6V2DA_lqgW-u1U';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpicmZlcm1yZmxmY3RyaXlocXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODc1NzAsImV4cCI6MjA5MDk2MzU3MH0.3nVmZBsKLDcmsllOP6XQJYcHv7JIkJDiEANtw_jw9z0';
 
-async function sb(table,method='GET',body=null,query=''){
-  const url=SUPABASE_URL+'/rest/v1/'+table+(query?'?'+query:'');
-  const opts={method,headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json','Prefer':method==='POST'?'return=representation':''}};
-  if(body)opts.body=JSON.stringify(body);
-  const r=await fetch(url,opts);
-  if(!r.ok){const e=await r.text();throw new Error(e);}
-  if(method==='DELETE'||r.status===204)return null;
+async function sb(table, method, body, query) {
+  method = method || 'GET';
+  query = query || '';
+  const url = SUPABASE_URL + '/rest/v1/' + table + (query ? '?' + query : '');
+  const opts = {
+    method: method,
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': 'Bearer ' + SUPABASE_KEY,
+      'Content-Type': 'application/json',
+      'Prefer': method === 'POST' ? 'return=representation' : ''
+    }
+  };
+  if (body) opts.body = JSON.stringify(body);
+  const r = await fetch(url, opts);
+  if (!r.ok) { const e = await r.text(); throw new Error(e); }
+  if (method === 'DELETE' || r.status === 204) return null;
   return r.json();
 }
 
-let songs=[],pads=[],outfits=[],services=[],prayers=[];
-let svcFilter='all';
-let openRows=new Set();
+var songs = [], pads = [], outfits = [], services = [], prayers = [];
+var svcFilter = 'all';
+var openRows = {};
 
-const MO=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-function fmt(d){if(!d)return'\u2014';const p=d.split('T')[0].split('-');return parseInt(p[2])+' '+MO[parseInt(p[1])-1]+' '+p[0];}
-function fmtS(d){if(!d)return'\u2014';const p=d.split('T')[0].split('-');return parseInt(p[2])+' '+MO[parseInt(p[1])-1];}
-function ago(d){if(!d)return'';const w=Math.floor((Date.now()-new Date(d))/(1000*60*60*24*7));if(w<=0)return'this week';if(w===1)return'1 wk ago';if(w<5)return w+' wks ago';const mo=Math.floor(w/4.33);if(mo<12)return mo<=1?'1 mo ago':mo+' mo ago';const yr=Math.floor(mo/12);return yr===1?'1 yr ago':yr+' yrs ago';}
-function today(){return new Date().toISOString().split('T')[0];}
-function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;');}
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-function showError(m){const e=document.getElementById('error-msg');e.textContent=m;e.style.display='block';setTimeout(()=>e.style.display='none',5000);}
-function swHtml(colors,sz){return(colors||[]).map(c=>'<div class="sw" style="width:'+sz+'px;height:'+sz+'px;background:'+c+';border-radius:'+Math.floor(sz/4)+'px"></div>').join('');}
-function isDecember(){return new Date().getMonth()===11;}
-function eligible(s){return!s.seasonal||isDecember();}
+var MO = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
-function getSong(t){return songs.find(s=>s.title===t);}
-function getPad(n){return pads.find(p=>p.name===n);}
-function getOutfit(n){return outfits.find(o=>o.name===n);}
-function getNextPrayer(){
-  const sorted=[...prayers].sort((a,b)=>a.sort_order-b.sort_order);
-  const lastUsed=sorted.filter(p=>p.last_used).sort((a,b)=>new Date(b.last_used)-new Date(a.last_used))[0];
-  if(!lastUsed)return sorted[0];
-  const idx=sorted.findIndex(p=>p.id===lastUsed.id);
-  return sorted[(idx+1)%sorted.length];
+function fmt(d) {
+  if (!d) return '\u2014';
+  var p = d.split('T')[0].split('-');
+  return parseInt(p[2]) + ' ' + MO[parseInt(p[1])-1] + ' ' + p[0];
+}
+function fmtS(d) {
+  if (!d) return '\u2014';
+  var p = d.split('T')[0].split('-');
+  return parseInt(p[2]) + ' ' + MO[parseInt(p[1])-1];
+}
+function ago(d) {
+  if (!d) return '';
+  var w = Math.floor((Date.now() - new Date(d)) / (1000*60*60*24*7));
+  if (w <= 0) return 'this week';
+  if (w === 1) return '1 wk ago';
+  if (w < 5) return w + ' wks ago';
+  var mo = Math.floor(w / 4.33);
+  if (mo < 12) return mo <= 1 ? '1 mo ago' : mo + ' mo ago';
+  var yr = Math.floor(mo / 12);
+  return yr === 1 ? '1 yr ago' : yr + ' yrs ago';
+}
+function today() { return new Date().toISOString().split('T')[0]; }
+function esc(s) {
+  return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;');
+}
+function toast(m) {
+  var t = document.getElementById('toast');
+  t.textContent = m; t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+function showError(m) {
+  var e = document.getElementById('error-msg');
+  e.textContent = m; e.style.display = 'block';
+  setTimeout(function() { e.style.display = 'none'; }, 5000);
+}
+function swHtml(colors, sz) {
+  return (colors || []).map(function(c) {
+    return '<div class="sw" style="width:' + sz + 'px;height:' + sz + 'px;background:' + c + ';border-radius:' + Math.floor(sz/4) + 'px"></div>';
+  }).join('');
+}
+function isDecember() { return new Date().getMonth() === 11; }
+function eligible(s) { return !s.seasonal || isDecember(); }
+function getSong(t) { return songs.find(function(s) { return s.title === t; }); }
+function getPad(n) { return pads.find(function(p) { return p.name === n; }); }
+function getOutfit(n) { return outfits.find(function(o) { return o.name === n; }); }
+
+function getNextPrayer() {
+  var sorted = prayers.slice().sort(function(a,b) { return a.sort_order - b.sort_order; });
+  var lastUsed = sorted.filter(function(p) { return p.last_used; })
+    .sort(function(a,b) { return new Date(b.last_used) - new Date(a.last_used); })[0];
+  if (!lastUsed) return sorted[0];
+  var idx = sorted.findIndex(function(p) { return p.id === lastUsed.id; });
+  return sorted[(idx + 1) % sorted.length];
 }
 
-function suggest(){
-  const byDate=(a,b)=>new Date(a.last_used||'2000-01-01')-new Date(b.last_used||'2000-01-01');
-  const byDateOutfit=(a,b)=>{if(!a.last_used&&!b.last_used)return 0;if(!a.last_used)return-1;if(!b.last_used)return 1;return new Date(a.last_used)-new Date(b.last_used);};
-  const openers=songs.filter(s=>s.role==='opener'&&eligible(s)).sort(byDate);
-  const closers=songs.filter(s=>s.role==='closer'&&eligible(s)).sort(byDate);
-  return{
-    song1:openers[0]?.title||'',
-    song2:closers[0]?.title||'',
-    pad:[...pads].sort(byDate)[0]?.name||'',
-    outfit:[...outfits].sort(byDateOutfit)[0]?.name||''
+function suggest() {
+  function byDate(a, b) { return new Date(a.last_used || '2000-01-01') - new Date(b.last_used || '2000-01-01'); }
+  function byDateOutfit(a, b) {
+    if (!a.last_used && !b.last_used) return 0;
+    if (!a.last_used) return -1;
+    if (!b.last_used) return 1;
+    return new Date(a.last_used) - new Date(b.last_used);
+  }
+  var openers = songs.filter(function(s) { return s.role === 'opener' && eligible(s); }).sort(byDate);
+  var closers = songs.filter(function(s) { return s.role === 'closer' && eligible(s); }).sort(byDate);
+  return {
+    song1: openers[0] ? openers[0].title : '',
+    song2: closers[0] ? closers[0].title : '',
+    pad: pads.slice().sort(byDate)[0] ? pads.slice().sort(byDate)[0].name : '',
+    outfit: outfits.slice().sort(byDateOutfit)[0] ? outfits.slice().sort(byDateOutfit)[0].name : ''
   };
 }
 
-function prayerOpts(sel){
-  const sorted=[...prayers].sort((a,b)=>a.sort_order-b.sort_order);
-  return'<option value="">— none —</option>'+sorted.map(p=>'<option value="'+esc(p.topic)+'"'+(sel===p.topic?' selected':'')+'>'+esc(p.topic)+'</option>').join('');
+function songOpts(sel, role) {
+  var list = role ? songs.filter(function(s) { return s.role === role; }) : songs;
+  var sorted = list.slice().sort(function(a,b) { return a.title.localeCompare(b.title); });
+  return '<option value="">\u2014 none \u2014</option>' + sorted.map(function(s) {
+    return '<option value="' + esc(s.title) + '"' + (sel === s.title ? ' selected' : '') + '>' + esc(s.title) + '</option>';
+  }).join('');
 }
-function songOpts(sel,role){
-  const list=role?songs.filter(s=>s.role===role):songs;
-  const sorted=[...list].sort((a,b)=>a.title.localeCompare(b.title));
-  return'<option value="">\u2014 none \u2014</option>'+sorted.map(s=>'<option value="'+esc(s.title)+'"'+(sel===s.title?' selected':'')+'>'+esc(s.title)+'</option>').join('');
+function padOpts(sel) {
+  var sorted = pads.slice().sort(function(a,b) { return new Date(a.last_used||'2000-01-01') - new Date(b.last_used||'2000-01-01'); });
+  return '<option value="">\u2014 none \u2014</option>' + sorted.map(function(p) {
+    return '<option value="' + esc(p.name) + '"' + (sel === p.name ? ' selected' : '') + '>' + esc(p.name) + '</option>';
+  }).join('');
 }
-function padOpts(sel){
-  const sorted=[...pads].sort((a,b)=>new Date(a.last_used||'2000-01-01')-new Date(b.last_used||'2000-01-01'));
-  return'<option value="">\u2014 none \u2014</option>'+sorted.map(p=>'<option value="'+esc(p.name)+'"'+(sel===p.name?' selected':'')+'>'+esc(p.name)+'</option>').join('');
+function outfitOpts(sel) {
+  return '<option value="">\u2014 none \u2014</option>' + outfits.map(function(o) {
+    return '<option value="' + esc(o.name) + '"' + (sel === o.name ? ' selected' : '') + '>' + esc(o.name) + '</option>';
+  }).join('');
 }
-function outfitOpts(sel){
-  return'<option value="">\u2014 none \u2014</option>'+outfits.map(o=>'<option value="'+esc(o.name)+'"'+(sel===o.name?' selected':'')+'>'+esc(o.name)+'</option>').join('');
-}
-
-const PAD_COLORS=["#7c6aaa","#2d7a4f","#c06090","#c88010","#1a7a7a","#c05030","#2563a8","#7a4f2d","#6a8c2a","#8c5a2a"];
-function padColor(n){const i=pads.findIndex(p=>p.name===n);return PAD_COLORS[(i>=0?i:0)%PAD_COLORS.length];}
-
-// ── TOPBAR ──
-function renderTopbar(){
-  const now=today();
-  const next=services.filter(s=>s.status==='upcoming'&&s.date>=now).sort((a,b)=>a.date.localeCompare(b.date))[0];
-  document.getElementById('topbar-next').textContent=next?fmt(next.date):'\u2014';
-}
-
-// ── STATS ──
-function renderStats(){
-  document.getElementById('s-total').textContent=services.length;
-  document.getElementById('s-conf').textContent=services.filter(s=>s.status==='confirmed').length;
-  document.getElementById('s-up').textContent=services.filter(s=>s.status==='upcoming').length;
-  document.getElementById('s-songs').textContent=songs.length;
-}
-
-// ── THIS WEEK BANNER ──
-function renderTWBanner(){
-  const el=document.getElementById('tw-banner');
-  const now=today();
-  const upcoming=services.filter(s=>s.status==='upcoming'&&s.date>=now).sort((a,b)=>a.date.localeCompare(b.date));
-  const svc=upcoming[0];
-  if(!svc){el.innerHTML='';return;}
-  const sg=suggest();
-  const song1=svc.song1||sg.song1;
-  const song2=svc.song2||sg.song2;
-  const pad=svc.pad||sg.pad;
-  const outfit=svc.outfit||sg.outfit;
-  const s1=getSong(song1),s2=getSong(song2),ot=getOutfit(outfit);
-  const nextP=getNextPrayer();
-  let h='<div class="this-week">';
-  h+='<div class="tw-hdr"><div class="tw-date">This week \u2014 '+fmt(svc.date)+'</div>';
-  h+='<span class="tw-badge">Suggested</span></div>';
-  if(svc.title)h+='<div class="tw-msg">&#8220;'+esc(svc.title)+'&#8221;</div>';
-  h+='<div class="tw-grid">';
-  h+='<div><div class="tw-lbl">Song 1</div><div class="tw-val">'+(song1||'\u2014')+'</div>'+(s1?'<div class="tw-meta">prev. '+fmtS(s1.last_used)+' \u00b7 '+ago(s1.last_used)+'</div>':'')+'</div>';
-  h+='<div><div class="tw-lbl">Song 2</div><div class="tw-val">'+(song2||'\u2014')+'</div>'+(s2?'<div class="tw-meta">prev. '+fmtS(s2.last_used)+' \u00b7 '+ago(s2.last_used)+'</div>':'')+'</div>';
-  h+='<div><div class="tw-lbl">Pad</div><div class="tw-val">'+(pad||'\u2014')+'</div></div>';
-  h+='<div><div class="tw-lbl">Outfit</div><div class="tw-val">'+(outfit||'\u2014')+'</div>'+(ot?'<div class="swatches">'+swHtml(ot.colors,14)+'</div>':'')+'</div>';
-  h+='<div><div class="tw-lbl">Prayer</div><div class="tw-val">'+(nextP?esc(nextP.topic):'\u2014')+'</div></div>';
-  h+='</div>';
-  h+='<div class="tw-hint">Expand the row below to confirm or override any suggestion.</div>';
-  h+='</div>';
-  el.innerHTML=h;
-}
-
-// ── PRAYER BANNER ──
-function renderPrayerBanner(){
-  const el=document.getElementById('prayer-banner');
-  const nextP=getNextPrayer();
-  const sorted=[...prayers].sort((a,b)=>a.sort_order-b.sort_order);
-  const lastUsed=sorted.filter(p=>p.last_used).sort((a,b)=>new Date(b.last_used)-new Date(a.last_used))[0];
-  if(!nextP){el.innerHTML='';return;}
-  el.innerHTML='<div class="prayer-banner"><div class="prayer-left"><div class="prayer-label">&#9654; Prayer Focus</div><div class="prayer-topic">'+esc(nextP.topic)+'</div><div class="prayer-last">Last week: '+(lastUsed?esc(lastUsed.topic):'none')+'</div></div><button class="prayer-done-btn" onclick="markPrayerDone()">Mark as done</button></div>';
-}
-
-// ── SERVICE TABLE ──
-function filterSvc(f,btn){
-  svcFilter=f;
-  document.querySelectorAll('.chips .chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');
-  renderTable();
-}
-
-function renderTable(){
-  const now=today();
-  let data=[...services].sort((a,b)=>b.date.localeCompare(a.date));
-  if(svcFilter!=='all')data=data.filter(s=>s.status===svcFilter);
-  const nx=services.filter(s=>s.status==='upcoming'&&s.date>=now).sort((a,b)=>a.date.localeCompare(b.date))[0];
-
-  document.getElementById('svc-body').innerHTML=data.map(svc=>{
-    const idx=services.indexOf(svc);
-    const isN=nx&&svc.id===nx.id;
-    const s1=getSong(svc.song1),s2=getSong(svc.song2),ot=getOutfit(svc.outfit);
-    const pc=svc.status==='confirmed'?'pill-confirmed':svc.status==='upcoming'?'pill-upcoming':'pill-draft';
-    const io=openRows.has(svc.id);
-    const outfitShort=svc.outfit&&svc.outfit.length>24?svc.outfit.slice(0,24)+'\u2026':svc.outfit;
-
-    const mainRow='<tr class="svc-row'+(io?' open':'')+'" onclick="toggleRow(\''+svc.id+'\')">'
-      +'<td class="td-date">'+fmt(svc.date)+(isN?'<span class="next-tag">Next</span>':'')+'</td>'
-      +'<td class="td-title'+(svc.title?'':' empty')+'">'+(svc.title||'Title not set')+'</td>'
-      +'<td class="td-song">'+(svc.song1||'\u2014')+'</td>'
-      +'<td class="td-song">'+(svc.song2||'\u2014')+'</td>'
-      +'<td class="td-pad">'+(svc.pad||'\u2014')+'</td>'
-      +'<td><div class="td-outfit">'+(ot?swHtml(ot.colors,12):'')+(svc.outfit?'<span style="font-size:11px;color:var(--ink2)">'+esc(outfitShort)+'</span>':'<span style="font-size:11px;color:var(--ink3)">\u2014</span>')+'</div></td>'
-      +'<td><span class="pill '+pc+'">'+svc.status+'</span></td>'
-      +'</tr>';
-
-    let expHtml='<tr class="exp-row'+(io?' open':'')+'" id="er-'+svc.id+'"><td colspan="7"><div class="exp-inner"><div class="exp-grid">';
-    expHtml+='<div><div class="exp-lbl">Song 1</div>'+(svc.status==='upcoming'?'<select class="exp-sel" onchange="updateSvc(\''+svc.id+'\',\'song1\',this.value)">'+songOpts(svc.song1,'opener')+'</select>':'<div class="exp-val'+(svc.song1?'':' empty')+'">'+(svc.song1||'not set')+'</div>'+(s1?'<div class="exp-meta">Last used: <strong>'+fmt(s1.last_used)+'</strong> \u00b7 '+ago(s1.last_used)+'</div>':''))+'</div>';
-    expHtml+='<div><div class="exp-lbl">Song 2</div>'+(svc.status==='upcoming'?'<select class="exp-sel" onchange="updateSvc(\''+svc.id+'\',\'song2\',this.value)">'+songOpts(svc.song2,'closer')+'</select>':'<div class="exp-val'+(svc.song2?'':' empty')+'">'+(svc.song2||'not set')+'</div>'+(s2?'<div class="exp-meta">Last used: <strong>'+fmt(s2.last_used)+'</strong> \u00b7 '+ago(s2.last_used)+'</div>':''))+'</div>';
-    expHtml+='<div><div class="exp-lbl">Pad</div>'+(svc.status==='upcoming'?'<select class="exp-sel" onchange="updateSvc(\''+svc.id+'\',\'pad\',this.value)">'+padOpts(svc.pad)+'</select>':'<div class="exp-val'+(svc.pad?'':' empty')+'">'+(svc.pad||'\u2014')+'</div>')+'</div>';
-    expHtml+='<div><div class="exp-lbl">Outfit</div>'+(svc.status==='upcoming'?'<select class="exp-sel" onchange="updateSvc(\''+svc.id+'\',\'outfit\',this.value)">'+outfitOpts(svc.outfit)+'</select>':'<div class="exp-val'+(svc.outfit?'':' empty')+'">'+(svc.outfit||'\u2014')+'</div>'+(ot?'<div class="swatches" style="margin-top:5px">'+swHtml(ot.colors,14)+'</div>':''))+'</div>';
-    if(svc.status==='upcoming'){expHtml+='<div style="grid-column:1/-1"><div class="exp-lbl">Message title</div><input class="exp-inp" placeholder="Add title\u2026" value="'+esc(svc.title||'')+'" onchange="updateSvc(\''+svc.id+'\',\'title\',this.value)"/></div>';
-expHtml+='<div style="grid-column:1/-1"><div class="exp-lbl">Prayer focus</div><select class="exp-sel" onchange="updateSvc(\''+svc.id+\',\'prayer\',this.value)">'+prayerOpts(svc.prayer)+'</select></div>';}
-    expHtml+='<div><div class="exp-lbl">Prayer</div>'+(svc.status==='upcoming'?'':(svc.prayer?'<div class="exp-val">'+esc(svc.prayer)+'</div>':'<div class="exp-val empty">not recorded</div>'))+'</div>';
-  expHtml+='</div><div class="exp-actions">';
-    if(svc.status==='upcoming')expHtml+='<button class="exp-btn primary" onclick="confirmSvc(\''+svc.id+'\',event)">✓ Confirm this week</button>';
-    else if(svc.status==='confirmed')expHtml+='<button class="exp-btn" onclick="editConfirmed(\''+svc.id+'\')">Edit</button>';
-    else if(svc.status==='confirmed')expHtml+='<button class="exp-btn" onclick="unconfirmSvc(\''+svc.id+'\',event)">Move to upcoming</button>';
-    else expHtml+='<button class="exp-btn primary" onclick="confirmSvc(\''+svc.id+'\',event)">\u2713 Confirm</button>';
-    expHtml+='<button class="exp-btn danger" onclick="deleteSvc(\''+svc.id+'\',event)">Delete</button>';
-    expHtml+='</div></div></td></tr>';
-
-    return mainRow+expHtml;
+function prayerOpts(sel) {
+  var sorted = prayers.slice().sort(function(a,b) { return a.sort_order - b.sort_order; });
+  return '<option value="">\u2014 none \u2014</option>' + sorted.map(function(p) {
+    return '<option value="' + esc(p.topic) + '"' + (sel === p.topic ? ' selected' : '') + '>' + esc(p.topic) + '</option>';
   }).join('');
 }
 
-function editConfirmed(id){
-  const svc=services.find(s=>s.id===id);
-  if(!svc)return;
-  // Temporarily set to upcoming to enable edit fields, then re-confirm
-  svc._editing=true;
-  svc.status='upcoming';
-  renderTable();
-  openRows.add(id);
-  renderTable();
-  // Re-confirm button will save
-}
-function toggleRow(id){
-  if(openRows.has(id))openRows.delete(id);else openRows.add(id);
-  renderTable();
+var PAD_COLORS = ["#7c6aaa","#2d7a4f","#c06090","#c88010","#1a7a7a","#c05030","#2563a8","#7a4f2d","#6a8c2a","#8c5a2a"];
+function padColor(n) {
+  var i = pads.findIndex(function(p) { return p.name === n; });
+  return PAD_COLORS[(i >= 0 ? i : 0) % PAD_COLORS.length];
 }
 
-async function updateSvc(id,field,val){
-  const svc=services.find(s=>s.id===id);
-  if(svc)svc[field]=val;
-  try{await sb('services','PATCH',{[field]:val},'id=eq.'+id);}
-  catch(e){showError('Failed to save: '+e.message);}
+function renderTopbar() {
+  var now = today();
+  var upcoming = services.filter(function(s) { return s.status === 'upcoming' && s.date >= now; })
+    .sort(function(a,b) { return a.date.localeCompare(b.date); });
+  document.getElementById('topbar-next').textContent = upcoming[0] ? fmt(upcoming[0].date) : '\u2014';
 }
 
-async function confirmSvc(id,e){
-  e.stopPropagation();
-  const svc=services.find(s=>s.id===id);
-  if(!svc)return;
-  // If editing a confirmed service, just save without resetting
-  const wasEditing=svc._editing;
-  delete svc._editing;
-  svc.status='confirmed';
-  // Auto-fill prayer from suggestion if not already set
-  if(!svc.prayer){const np=getNextPrayer();if(np)svc.prayer=np.topic;}
-  const updates=[sb('services','PATCH',{status:'confirmed',title:svc.title,song1:svc.song1,song2:svc.song2,pad:svc.pad,outfit:svc.outfit,prayer:svc.prayer},'id=eq.'+id)];
-  if(svc.song1){const s=getSong(svc.song1);if(s){s.last_used=svc.date;updates.push(sb('songs','PATCH',{last_used:svc.date},'id=eq.'+s.id));}}
-  if(svc.song2){const s=getSong(svc.song2);if(s){s.last_used=svc.date;updates.push(sb('songs','PATCH',{last_used:svc.date},'id=eq.'+s.id));}}
-  if(svc.pad){const p=getPad(svc.pad);if(p){p.last_used=svc.date;updates.push(sb('pads','PATCH',{last_used:svc.date},'id=eq.'+p.id));}}
-  if(svc.outfit){const o=getOutfit(svc.outfit);if(o){o.last_used=svc.date;updates.push(sb('outfits','PATCH',{last_used:svc.date},'id=eq.'+o.id));}}
-  try{await Promise.all(updates);}catch(err){showError('Failed to confirm: '+err.message);return;}
-  openRows.delete(id);renderAll();toast('Confirmed \u2014 suggestions updated');
+function renderStats() {
+  document.getElementById('s-total').textContent = services.length;
+  document.getElementById('s-conf').textContent = services.filter(function(s) { return s.status === 'confirmed'; }).length;
+  document.getElementById('s-up').textContent = services.filter(function(s) { return s.status === 'upcoming'; }).length;
+  document.getElementById('s-songs').textContent = songs.length;
 }
 
-async function unconfirmSvc(id,e){
-  e.stopPropagation();
-  const svc=services.find(s=>s.id===id);
-  if(svc)svc.status='upcoming';
-  try{await sb('services','PATCH',{status:'upcoming'},'id=eq.'+id);}catch(err){showError(err.message);}
-  renderAll();toast('Moved to upcoming');
+function renderTWBanner() {
+  var el = document.getElementById('tw-banner');
+  var now = today();
+  var upcoming = services.filter(function(s) { return s.status === 'upcoming' && s.date >= now; })
+    .sort(function(a,b) { return a.date.localeCompare(b.date); });
+  var svc = upcoming[0];
+  if (!svc) { el.innerHTML = ''; return; }
+  var sg = suggest();
+  var song1 = svc.song1 || sg.song1;
+  var song2 = svc.song2 || sg.song2;
+  var pad = svc.pad || sg.pad;
+  var outfit = svc.outfit || sg.outfit;
+  var s1 = getSong(song1), s2 = getSong(song2), ot = getOutfit(outfit);
+  var nextP = getNextPrayer();
+  var h = '<div class="this-week">';
+  h += '<div class="tw-hdr"><div class="tw-date">This week \u2014 ' + fmt(svc.date) + '</div>';
+  h += '<span class="tw-badge">Suggested</span></div>';
+  if (svc.title) h += '<div class="tw-msg">\u201c' + esc(svc.title) + '\u201d</div>';
+  h += '<div class="tw-grid">';
+  h += '<div><div class="tw-lbl">Song 1</div><div class="tw-val">' + (song1 || '\u2014') + '</div>';
+  if (s1) h += '<div class="tw-meta">prev. ' + fmtS(s1.last_used) + ' \u00b7 ' + ago(s1.last_used) + '</div>';
+  h += '</div>';
+  h += '<div><div class="tw-lbl">Song 2</div><div class="tw-val">' + (song2 || '\u2014') + '</div>';
+  if (s2) h += '<div class="tw-meta">prev. ' + fmtS(s2.last_used) + ' \u00b7 ' + ago(s2.last_used) + '</div>';
+  h += '</div>';
+  h += '<div><div class="tw-lbl">Pad</div><div class="tw-val">' + (pad || '\u2014') + '</div></div>';
+  h += '<div><div class="tw-lbl">Outfit</div><div class="tw-val">' + (outfit || '\u2014') + '</div>';
+  if (ot) h += '<div class="swatches">' + swHtml(ot.colors, 14) + '</div>';
+  h += '</div>';
+  h += '<div><div class="tw-lbl">Prayer</div><div class="tw-val">' + (nextP ? esc(nextP.topic) : '\u2014') + '</div></div>';
+  h += '</div>';
+  h += '<div class="tw-hint">Expand the row below to confirm or override.</div>';
+  h += '</div>';
+  el.innerHTML = h;
 }
 
-async function deleteSvc(id,e){
-  e.stopPropagation();
-  if(!confirm('Delete this service?'))return;
-  services=services.filter(s=>s.id!==id);
-  openRows.delete(id);
-  try{await sb('services','DELETE',null,'id=eq.'+id);}catch(err){showError(err.message);}
-  renderAll();toast('Deleted');
+function renderPrayerBanner() {
+  var el = document.getElementById('prayer-banner');
+  var nextP = getNextPrayer();
+  var sorted = prayers.slice().sort(function(a,b) { return a.sort_order - b.sort_order; });
+  var lastUsed = sorted.filter(function(p) { return p.last_used; })
+    .sort(function(a,b) { return new Date(b.last_used) - new Date(a.last_used); })[0];
+  if (!nextP) { el.innerHTML = ''; return; }
+  el.innerHTML = '<div class="prayer-banner"><div class="prayer-left"><div class="prayer-label">\u25b6 Prayer Focus</div><div class="prayer-topic">' + esc(nextP.topic) + '</div><div class="prayer-last">Last week: ' + (lastUsed ? esc(lastUsed.topic) : 'none') + '</div></div><button class="prayer-done-btn" onclick="markPrayerDone()">Mark as done</button></div>';
 }
 
-// ── SONGS ──
-function renderSongs(){
-  const byDate=(a,b)=>new Date(a.last_used||'2000-01-01')-new Date(b.last_used||'2000-01-01');
-  const openers=songs.filter(s=>s.role==='opener'&&eligible(s)).sort(byDate);
-  const closers=songs.filter(s=>s.role==='closer'&&eligible(s)).sort(byDate);
-  let h='<div class="list-section">Song 1 \u2014 Openers</div>';
-  h+=openers.slice(0,3).map((s,i)=>'<div class="list-row"><div class="row-rank">'+(i+1)+'</div><div class="row-info"><div class="row-name">'+esc(s.title)+'</div><div class="row-last">Last used: <strong>'+fmt(s.last_used)+'</strong> \u00b7 '+ago(s.last_used)+'</div></div><div class="row-badge">'+esc(s.key||'?')+'</div></div>').join('');
-  h+='<div class="list-section">Song 2 \u2014 Closers</div>';
-  h+=closers.slice(0,3).map((s,i)=>'<div class="list-row"><div class="row-rank">'+(i+1)+'</div><div class="row-info"><div class="row-name">'+esc(s.title)+'</div><div class="row-last">Last used: <strong>'+fmt(s.last_used)+'</strong> \u00b7 '+ago(s.last_used)+'</div></div><div class="row-badge">'+esc(s.key||'?')+'</div></div>').join('');
-  document.getElementById('song-suggests').innerHTML=h;
-
-  const allSorted=[...songs].sort(byDate);
-  document.getElementById('song-list').innerHTML=allSorted.map(s=>'<div class="list-row"><div class="row-info"><div class="row-name">'+esc(s.title)+'<span class="'+(s.role==='opener'?'role-opener':'role-closer')+'">'+(s.role==='opener'?'Opener':'Closer')+'</span>'+(s.seasonal?'<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;background:#e8f5e9;color:#2d7a4f;border:1px solid rgba(45,122,79,0.2);margin-left:4px">Seasonal</span>':'')+'</div><div class="row-last">Last used: <strong>'+fmt(s.last_used)+'</strong> \u00b7 '+ago(s.last_used)+'</div></div><div class="row-badge">'+esc(s.key||'?')+'</div></div>').join('');
-}
-
-async function addSong(){
-  const title=document.getElementById('new-song').value.trim();
-  const key=document.getElementById('new-key').value.trim().toUpperCase();
-  const role=document.getElementById('new-role').value;
-  if(!title)return;
-  const btn=document.getElementById('add-song-btn');btn.disabled=true;
-  try{
-    const res=await sb('songs','POST',{title,key:key||'?',role,seasonal:false,last_used:null});
-    songs.push(res[0]);
-    document.getElementById('new-song').value='';document.getElementById('new-key').value='';
-    renderSongs();populateAddForm();toast('"'+title+'" added');
-  }catch(err){showError(err.message);}
-  btn.disabled=false;
-}
-
-// ── PADS ──
-function renderPads(){
-  const sorted=[...pads].sort((a,b)=>new Date(a.last_used||'2000-01-01')-new Date(b.last_used||'2000-01-01'));
-  document.getElementById('pad-suggests').innerHTML=sorted.slice(0,5).map((p,i)=>'<div class="list-row"><div class="row-rank">'+(i+1)+'</div><div class="pad-dot" style="background:'+padColor(p.name)+'"></div><div class="row-info"><div class="row-name">'+esc(p.name)+'</div><div class="row-last">Last used: <strong>'+fmt(p.last_used)+'</strong> \u00b7 '+ago(p.last_used)+'</div></div></div>').join('');
-  document.getElementById('pad-list').innerHTML=sorted.map(p=>'<div class="list-row"><div class="pad-dot" style="background:'+padColor(p.name)+'"></div><div class="row-info"><div class="row-name">'+esc(p.name)+'</div><div class="row-last">Last used: <strong>'+fmt(p.last_used)+'</strong> \u00b7 '+ago(p.last_used)+'</div></div></div>').join('');
-}
-
-async function addPad(){
-  const name=document.getElementById('new-pad').value.trim();
-  if(!name)return;
-  const btn=document.getElementById('add-pad-btn');btn.disabled=true;
-  try{
-    const res=await sb('pads','POST',{name,last_used:null});
-    pads.push(res[0]);
-    document.getElementById('new-pad').value='';
-    renderPads();populateAddForm();toast('"'+name+'" added');
-  }catch(err){showError(err.message);}
-  btn.disabled=false;
-}
-
-// ── OUTFITS ──
-function renderOutfits(){
-  const sorted=[...outfits].sort((a,b)=>{if(!a.last_used&&!b.last_used)return 0;if(!a.last_used)return-1;if(!b.last_used)return 1;return new Date(a.last_used)-new Date(b.last_used);});
-  const cnt=n=>services.filter(s=>s.outfit===n).length;
-  document.getElementById('outfit-grid').innerHTML=sorted.map(o=>'<div class="outfit-card"><div class="outfit-swatches">'+(o.colors||[]).map(c=>'<div class="outfit-swatch" style="background:'+c+'"></div>').join('')+'</div><div class="outfit-name">'+esc(o.name)+'</div><div class="outfit-meta">'+(o.last_used?'Last: <strong>'+fmt(o.last_used)+'</strong> \u00b7 '+ago(o.last_used):'<span style="color:var(--ink3)">Not tracked yet</span>')+'</div><div class="outfit-meta" style="margin-top:2px">Used '+cnt(o.name)+'\u00d7</div></div>').join('');
-}
-
-async function addOutfit(){
-  const name=document.getElementById('no-name').value.trim();
-  if(!name)return;
-  const nc=parseInt(document.getElementById('no-nc').value);
-  const colors=[document.getElementById('no-c1').value];
-  if(nc>=2)colors.push(document.getElementById('no-c2').value);
-  if(nc>=3)colors.push(document.getElementById('no-c3').value);
-  const btn=document.getElementById('add-outfit-btn');btn.disabled=true;
-  try{
-    const res=await sb('outfits','POST',{name,colors,last_used:null});
-    outfits.push(res[0]);
-    document.getElementById('no-name').value='';
-    renderOutfits();populateAddForm();toast('"'+name+'" added');
-  }catch(err){showError(err.message);}
-  btn.disabled=false;
-}
-
-// ── PRAYERS ──
-function renderPrayers(){
-  const sorted=[...prayers].sort((a,b)=>a.sort_order-b.sort_order);
-  document.getElementById('prayer-list').innerHTML=sorted.map((p,i)=>'<div class="list-row"><div class="row-rank">'+(i+1)+'</div><div class="row-info"><div class="row-name">'+esc(p.topic)+'</div><div class="row-last">Last used: <strong>'+(p.last_used?fmt(p.last_used):'never')+'</strong>'+(p.last_used?' \u00b7 '+ago(p.last_used):'')+'</div></div></div>').join('');
-}
-
-async function addPrayer(){
-  const topic=document.getElementById('new-prayer').value.trim();
-  if(!topic)return;
-  const maxOrder=prayers.reduce((m,p)=>Math.max(m,p.sort_order),0);
-  const btn=document.getElementById('add-prayer-btn');btn.disabled=true;
-  try{
-    const res=await sb('prayers','POST',{topic,sort_order:maxOrder+1,last_used:null});
-    prayers.push(res[0]);
-    document.getElementById('new-prayer').value='';
-    renderPrayers();renderPrayerBanner();renderTWBanner();toast('"'+topic+'" added');
-  }catch(err){showError(err.message);}
-  btn.disabled=false;
-}
-
-async function markPrayerDone(){
-  const nextP=getNextPrayer();
-  if(!nextP)return;
-  nextP.last_used=today();
-  try{
-    await sb('prayers','PATCH',{last_used:today()},'id=eq.'+nextP.id);
-    renderPrayerBanner();renderTWBanner();renderPrayers();
-    toast('Prayer focus updated \u2014 '+nextP.topic);
-  }catch(err){showError(err.message);}
-}
-
-// ── ADD SERVICE ──
-function populateAddForm(){
-  document.getElementById('ns-date').value=today();
-  document.getElementById('ns-s1').innerHTML=songOpts('','opener');
-  document.getElementById('ns-s2').innerHTML=songOpts('','closer');
-  document.getElementById('ns-pad').innerHTML=padOpts('');
-  document.getElementById('ns-outfit').innerHTML=outfitOpts('');
-  document.getElementById('ns-prayer').innerHTML=prayerOpts('');
-}
-
-async function saveService(){
-  const date=document.getElementById('ns-date').value;
-  if(!date){toast('Please pick a date');return;}
-  const np=getNextPrayer();const svc={date,title:document.getElementById('ns-title').value.trim(),song1:document.getElementById('ns-s1').value,song2:document.getElementById('ns-s2').value,pad:document.getElementById('ns-pad').value,outfit:document.getElementById('ns-outfit').value,status:document.getElementById('ns-status').value,prayer:np?np.topic:''};
-  const btn=document.getElementById('save-svc-btn');btn.disabled=true;
-  try{
-    if(svc.status==='confirmed'){
-      const updates=[];
-      if(svc.song1){const s=getSong(svc.song1);if(s){s.last_used=date;updates.push(sb('songs','PATCH',{last_used:date},'id=eq.'+s.id));}}
-      if(svc.song2){const s=getSong(svc.song2);if(s){s.last_used=date;updates.push(sb('songs','PATCH',{last_used:date},'id=eq.'+s.id));}}
-      if(svc.pad){const p=getPad(svc.pad);if(p){p.last_used=date;updates.push(sb('pads','PATCH',{last_used:date},'id=eq.'+p.id));}}
-      if(svc.outfit){const o=getOutfit(svc.outfit);if(o){o.last_used=date;updates.push(sb('outfits','PATCH',{last_used:date},'id=eq.'+o.id));}}
-      if(updates.length)await Promise.all(updates);
-    }
-    const res=await sb('services','POST',svc);
-    services.push(res[0]);
-    services.sort((a,b)=>a.date.localeCompare(b.date));
-    document.getElementById('ns-title').value='';
-    toast('Service saved');
-    showPage('planner',document.getElementById('nav-planner'));
-    renderAll();
-  }catch(err){showError(err.message);}
-  btn.disabled=false;
-}
-
-// ── NAV ──
-const PAGE_SUBS={planner:'Planner',add:'Add Service',songs:'Songs',pads:'Pads',outfits:'Outfits',prayers:'Prayers'};
-function showPage(id,btn){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(n=>n.classList.remove('active'));
-  document.getElementById('page-'+id).classList.add('active');
+function filterSvc(f, btn) {
+  svcFilter = f;
+  document.querySelectorAll('.chips .chip').forEach(function(c) { c.classList.remove('active'); });
   btn.classList.add('active');
-  document.getElementById('page-sub').textContent=PAGE_SUBS[id]||id;
-  if(id==='add')populateAddForm();
+  renderTable();
 }
 
-// ── RENDER ALL ──
-function renderAll(){
-  renderTopbar();renderStats();renderTWBanner();renderPrayerBanner();
-  renderTable();renderSongs();renderPads();renderOutfits();renderPrayers();
+function renderTable() {
+  var now = today();
+  var data = services.slice().sort(function(a,b) { return b.date.localeCompare(a.date); });
+  if (svcFilter !== 'all') data = data.filter(function(s) { return s.status === svcFilter; });
+  var nx = services.filter(function(s) { return s.status === 'upcoming' && s.date >= now; })
+    .sort(function(a,b) { return a.date.localeCompare(b.date); })[0];
+
+  var html = data.map(function(svc) {
+    var isN = nx && svc.id === nx.id;
+    var s1 = getSong(svc.song1), s2 = getSong(svc.song2), ot = getOutfit(svc.outfit);
+    var pc = svc.status === 'confirmed' ? 'pill-confirmed' : svc.status === 'upcoming' ? 'pill-upcoming' : 'pill-draft';
+    var io = openRows[svc.id];
+    var outfitShort = svc.outfit && svc.outfit.length > 24 ? svc.outfit.slice(0,24) + '\u2026' : svc.outfit;
+
+    var main = '<tr class="svc-row' + (io ? ' open' : '') + '" onclick="toggleRow(\'' + svc.id + '\')">';
+    main += '<td class="td-date">' + fmt(svc.date) + (isN ? '<span class="next-tag">Next</span>' : '') + '</td>';
+    main += '<td class="td-title' + (svc.title ? '' : ' empty') + '">' + (svc.title || 'Title not set') + '</td>';
+    main += '<td class="td-song">' + (svc.song1 || '\u2014') + '</td>';
+    main += '<td class="td-song">' + (svc.song2 || '\u2014') + '</td>';
+    main += '<td class="td-pad">' + (svc.pad || '\u2014') + '</td>';
+    main += '<td><div class="td-outfit">' + (ot ? swHtml(ot.colors, 12) : '') + (svc.outfit ? '<span style="font-size:11px;color:var(--ink2)">' + esc(outfitShort) + '</span>' : '<span style="font-size:11px;color:var(--ink3)">\u2014</span>') + '</div></td>';
+    main += '<td><span class="pill ' + pc + '">' + svc.status + '</span></td>';
+    main += '</tr>';
+
+    var exp = '<tr class="exp-row' + (io ? ' open' : '') + '" id="er-' + svc.id + '"><td colspan="7"><div class="exp-inner">';
+    exp += '<div class="exp-grid">';
+
+    // Song 1
+    exp += '<div><div class="exp-lbl">Song 1</div>';
+    if (svc.status === 'upcoming') {
+      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="song1" onchange="updateSvcFromEl(this)">' + songOpts(svc.song1, 'opener') + '</select>';
+    } else {
+      exp += '<div class="exp-val' + (svc.song1 ? '' : ' empty') + '">' + (svc.song1 || 'not set') + '</div>';
+      if (s1) exp += '<div class="exp-meta">Last used: <strong>' + fmt(s1.last_used) + '</strong> \u00b7 ' + ago(s1.last_used) + '</div>';
+    }
+    exp += '</div>';
+
+    // Song 2
+    exp += '<div><div class="exp-lbl">Song 2</div>';
+    if (svc.status === 'upcoming') {
+      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="song2" onchange="updateSvcFromEl(this)">' + songOpts(svc.song2, 'closer') + '</select>';
+    } else {
+      exp += '<div class="exp-val' + (svc.song2 ? '' : ' empty') + '">' + (svc.song2 || 'not set') + '</div>';
+      if (s2) exp += '<div class="exp-meta">Last used: <strong>' + fmt(s2.last_used) + '</strong> \u00b7 ' + ago(s2.last_used) + '</div>';
+    }
+    exp += '</div>';
+
+    // Pad
+    exp += '<div><div class="exp-lbl">Pad</div>';
+    if (svc.status === 'upcoming') {
+      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="pad" onchange="updateSvcFromEl(this)">' + padOpts(svc.pad) + '</select>';
+    } else {
+      exp += '<div class="exp-val' + (svc.pad ? '' : ' empty') + '">' + (svc.pad || '\u2014') + '</div>';
+    }
+    exp += '</div>';
+
+    // Outfit
+    exp += '<div><div class="exp-lbl">Outfit</div>';
+    if (svc.status === 'upcoming') {
+      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="outfit" onchange="updateSvcFromEl(this)">' + outfitOpts(svc.outfit) + '</select>';
+    } else {
+      exp += '<div class="exp-val' + (svc.outfit ? '' : ' empty') + '">' + (svc.outfit || '\u2014') + '</div>';
+      if (ot) exp += '<div class="swatches" style="margin-top:5px">' + swHtml(ot.colors, 14) + '</div>';
+    }
+    exp += '</div>';
+
+    // Prayer
+    exp += '<div><div class="exp-lbl">Prayer focus</div>';
+    if (svc.status === 'upcoming') {
+      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="prayer" onchange="updateSvcFromEl(this)">' + prayerOpts(svc.prayer) + '</select>';
+    } else {
+      exp += '<div class="exp-val' + (svc.prayer ? '' : ' empty') + '">' + (svc.prayer || 'not recorded') + '</div>';
+    }
+    exp += '</div>';
+
+    // Title (upcoming only)
+    if (svc.status === 'upcoming') {
+      exp += '<div style="grid-column:1/-1"><div class="exp-lbl">Message title</div>';
+      exp += '<input class="exp-inp" placeholder="Add title\u2026" value="' + esc(svc.title || '') + '" data-id="' + svc.id + '" data-field="title" onchange="updateSvcFromEl(this)"/>';
+      exp += '</div>';
+    }
+
+    exp += '</div>'; // end exp-grid
+    exp += '<div class="exp-actions">';
+    if (svc.status === 'upcoming') {
+      exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="confirmSvc(this.dataset.id, event)">\u2713 Confirm this week</button>';
+    } else if (svc.status === 'confirmed') {
+      exp += '<button class="exp-btn" data-id="' + svc.id + '" onclick="unconfirmSvc(this.dataset.id, event)">Move to upcoming</button>';
+    } else {
+      exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="confirmSvc(this.dataset.id, event)">\u2713 Confirm</button>';
+    }
+    exp += '<button class="exp-btn danger" data-id="' + svc.id + '" onclick="deleteSvc(this.dataset.id, event)">Delete</button>';
+    exp += '</div>';
+    exp += '</div></td></tr>';
+
+    return main + exp;
+  }).join('');
+
+  document.getElementById('svc-body').innerHTML = html;
 }
 
-// ── INIT ──
-async function init(){
-  try{
-    const [s,p,o,sv,pr]=await Promise.all([
-      sb('songs','GET',null,'order=last_used.asc.nullsfirst'),
-      sb('pads','GET',null,'order=last_used.asc.nullsfirst'),
-      sb('outfits','GET',null,'order=last_used.asc.nullsfirst'),
-      sb('services','GET',null,'order=date.asc'),
-      sb('prayers','GET',null,'order=sort_order.asc'),
-    ]);
-    songs=s;pads=p;outfits=o;services=sv;prayers=pr;
-    document.getElementById('loading').style.display='none';
-    document.getElementById('app').style.display='flex';
+function toggleRow(id) {
+  openRows[id] = !openRows[id];
+  renderTable();
+}
+
+function updateSvcFromEl(el) {
+  var id = el.dataset.id;
+  var field = el.dataset.field;
+  var val = el.value;
+  updateSvc(id, field, val);
+}
+
+async function updateSvc(id, field, val) {
+  var svc = services.find(function(s) { return s.id === id; });
+  if (svc) svc[field] = val;
+  try {
+    var patch = {};
+    patch[field] = val;
+    await sb('services', 'PATCH', patch, 'id=eq.' + id);
+  } catch(e) { showError('Save failed: ' + e.message); }
+}
+
+async function confirmSvc(id, e) {
+  e.stopPropagation();
+  var svc = services.find(function(s) { return s.id === id; });
+  if (!svc) return;
+  svc.status = 'confirmed';
+  if (!svc.prayer) { var np = getNextPrayer(); if (np) svc.prayer = np.topic; }
+  var updates = [sb('services', 'PATCH', {status:'confirmed', title:svc.title, song1:svc.song1, song2:svc.song2, pad:svc.pad, outfit:svc.outfit, prayer:svc.prayer}, 'id=eq.' + id)];
+  if (svc.song1) { var s = getSong(svc.song1); if (s) { s.last_used = svc.date; updates.push(sb('songs', 'PATCH', {last_used:svc.date}, 'id=eq.' + s.id)); } }
+  if (svc.song2) { var s2 = getSong(svc.song2); if (s2) { s2.last_used = svc.date; updates.push(sb('songs', 'PATCH', {last_used:svc.date}, 'id=eq.' + s2.id)); } }
+  if (svc.pad) { var p = getPad(svc.pad); if (p) { p.last_used = svc.date; updates.push(sb('pads', 'PATCH', {last_used:svc.date}, 'id=eq.' + p.id)); } }
+  if (svc.outfit) { var o = getOutfit(svc.outfit); if (o) { o.last_used = svc.date; updates.push(sb('outfits', 'PATCH', {last_used:svc.date}, 'id=eq.' + o.id)); } }
+  try { await Promise.all(updates); } catch(err) { showError('Failed: ' + err.message); return; }
+  openRows[id] = false;
+  renderAll();
+  toast('Confirmed \u2014 suggestions updated');
+}
+
+async function unconfirmSvc(id, e) {
+  e.stopPropagation();
+  var svc = services.find(function(s) { return s.id === id; });
+  if (svc) svc.status = 'upcoming';
+  try { await sb('services', 'PATCH', {status:'upcoming'}, 'id=eq.' + id); } catch(err) { showError(err.message); }
+  renderAll();
+  toast('Moved to upcoming');
+}
+
+async function deleteSvc(id, e) {
+  e.stopPropagation();
+  if (!confirm('Delete this service?')) return;
+  services = services.filter(function(s) { return s.id !== id; });
+  openRows[id] = false;
+  try { await sb('services', 'DELETE', null, 'id=eq.' + id); } catch(err) { showError(err.message); }
+  renderAll();
+  toast('Deleted');
+}
+
+function renderSongs() {
+  function byDate(a, b) { return new Date(a.last_used||'2000-01-01') - new Date(b.last_used||'2000-01-01'); }
+  var openers = songs.filter(function(s) { return s.role === 'opener' && eligible(s); }).sort(byDate);
+  var closers = songs.filter(function(s) { return s.role === 'closer' && eligible(s); }).sort(byDate);
+  var h = '<div class="list-section">Song 1 \u2014 Openers</div>';
+  h += openers.slice(0,3).map(function(s, i) {
+    return '<div class="list-row"><div class="row-rank">' + (i+1) + '</div><div class="row-info"><div class="row-name">' + esc(s.title) + '</div><div class="row-last">Last used: <strong>' + fmt(s.last_used) + '</strong> \u00b7 ' + ago(s.last_used) + '</div></div><div class="row-badge">' + esc(s.key||'?') + '</div></div>';
+  }).join('');
+  h += '<div class="list-section">Song 2 \u2014 Closers</div>';
+  h += closers.slice(0,3).map(function(s, i) {
+    return '<div class="list-row"><div class="row-rank">' + (i+1) + '</div><div class="row-info"><div class="row-name">' + esc(s.title) + '</div><div class="row-last">Last used: <strong>' + fmt(s.last_used) + '</strong> \u00b7 ' + ago(s.last_used) + '</div></div><div class="row-badge">' + esc(s.key||'?') + '</div></div>';
+  }).join('');
+  document.getElementById('song-suggests').innerHTML = h;
+
+  var allSorted = songs.slice().sort(byDate);
+  document.getElementById('song-list').innerHTML = allSorted.map(function(s) {
+    var roleClass = s.role === 'opener' ? 'role-opener' : 'role-closer';
+    var roleLabel = s.role === 'opener' ? 'Opener' : 'Closer';
+    var seasonal = s.seasonal ? '<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;background:#e8f5e9;color:#2d7a4f;border:1px solid rgba(45,122,79,0.2);margin-left:4px">Seasonal</span>' : '';
+    return '<div class="list-row"><div class="row-info"><div class="row-name">' + esc(s.title) + '<span class="' + roleClass + '">' + roleLabel + '</span>' + seasonal + '</div><div class="row-last">Last used: <strong>' + fmt(s.last_used) + '</strong> \u00b7 ' + ago(s.last_used) + '</div></div><div class="row-badge">' + esc(s.key||'?') + '</div></div>';
+  }).join('');
+}
+
+async function addSong() {
+  var title = document.getElementById('new-song').value.trim();
+  var key = document.getElementById('new-key').value.trim().toUpperCase();
+  var role = document.getElementById('new-role').value;
+  if (!title) return;
+  var btn = document.getElementById('add-song-btn'); btn.disabled = true;
+  try {
+    var res = await sb('songs', 'POST', {title:title, key:key||'?', role:role, seasonal:false, last_used:null});
+    songs.push(res[0]);
+    document.getElementById('new-song').value = '';
+    document.getElementById('new-key').value = '';
+    renderSongs(); populateAddForm();
+    toast('"' + title + '" added');
+  } catch(err) { showError(err.message); }
+  btn.disabled = false;
+}
+
+function renderPads() {
+  var sorted = pads.slice().sort(function(a,b) { return new Date(a.last_used||'2000-01-01') - new Date(b.last_used||'2000-01-01'); });
+  document.getElementById('pad-suggests').innerHTML = sorted.slice(0,5).map(function(p, i) {
+    return '<div class="list-row"><div class="row-rank">' + (i+1) + '</div><div class="pad-dot" style="background:' + padColor(p.name) + '"></div><div class="row-info"><div class="row-name">' + esc(p.name) + '</div><div class="row-last">Last used: <strong>' + fmt(p.last_used) + '</strong> \u00b7 ' + ago(p.last_used) + '</div></div></div>';
+  }).join('');
+  document.getElementById('pad-list').innerHTML = sorted.map(function(p) {
+    return '<div class="list-row"><div class="pad-dot" style="background:' + padColor(p.name) + '"></div><div class="row-info"><div class="row-name">' + esc(p.name) + '</div><div class="row-last">Last used: <strong>' + fmt(p.last_used) + '</strong> \u00b7 ' + ago(p.last_used) + '</div></div></div>';
+  }).join('');
+}
+
+async function addPad() {
+  var name = document.getElementById('new-pad').value.trim();
+  if (!name) return;
+  var btn = document.getElementById('add-pad-btn'); btn.disabled = true;
+  try {
+    var res = await sb('pads', 'POST', {name:name, last_used:null});
+    pads.push(res[0]);
+    document.getElementById('new-pad').value = '';
+    renderPads(); populateAddForm();
+    toast('"' + name + '" added');
+  } catch(err) { showError(err.message); }
+  btn.disabled = false;
+}
+
+function renderOutfits() {
+  var sorted = outfits.slice().sort(function(a, b) {
+    if (!a.last_used && !b.last_used) return 0;
+    if (!a.last_used) return -1;
+    if (!b.last_used) return 1;
+    return new Date(a.last_used) - new Date(b.last_used);
+  });
+  function cnt(n) { return services.filter(function(s) { return s.outfit === n; }).length; }
+  document.getElementById('outfit-grid').innerHTML = sorted.map(function(o) {
+    return '<div class="outfit-card"><div class="outfit-swatches">' + (o.colors||[]).map(function(c) { return '<div class="outfit-swatch" style="background:' + c + '"></div>'; }).join('') + '</div><div class="outfit-name">' + esc(o.name) + '</div><div class="outfit-meta">' + (o.last_used ? 'Last: <strong>' + fmt(o.last_used) + '</strong> \u00b7 ' + ago(o.last_used) : '<span style="color:var(--ink3)">Not tracked yet</span>') + '</div><div class="outfit-meta" style="margin-top:2px">Used ' + cnt(o.name) + '\u00d7</div></div>';
+  }).join('');
+}
+
+async function addOutfit() {
+  var name = document.getElementById('no-name').value.trim();
+  if (!name) return;
+  var nc = parseInt(document.getElementById('no-nc').value);
+  var colors = [document.getElementById('no-c1').value];
+  if (nc >= 2) colors.push(document.getElementById('no-c2').value);
+  if (nc >= 3) colors.push(document.getElementById('no-c3').value);
+  var btn = document.getElementById('add-outfit-btn'); btn.disabled = true;
+  try {
+    var res = await sb('outfits', 'POST', {name:name, colors:colors, last_used:null});
+    outfits.push(res[0]);
+    document.getElementById('no-name').value = '';
+    renderOutfits(); populateAddForm();
+    toast('"' + name + '" added');
+  } catch(err) { showError(err.message); }
+  btn.disabled = false;
+}
+
+function renderPrayers() {
+  var sorted = prayers.slice().sort(function(a,b) { return a.sort_order - b.sort_order; });
+  document.getElementById('prayer-list').innerHTML = sorted.map(function(p, i) {
+    return '<div class="list-row"><div class="row-rank">' + (i+1) + '</div><div class="row-info"><div class="row-name">' + esc(p.topic) + '</div><div class="row-last">Last used: <strong>' + (p.last_used ? fmt(p.last_used) : 'never') + '</strong>' + (p.last_used ? ' \u00b7 ' + ago(p.last_used) : '') + '</div></div></div>';
+  }).join('');
+}
+
+async function addPrayer() {
+  var topic = document.getElementById('new-prayer').value.trim();
+  if (!topic) return;
+  var maxOrder = prayers.reduce(function(m,p) { return Math.max(m, p.sort_order); }, 0);
+  var btn = document.getElementById('add-prayer-btn'); btn.disabled = true;
+  try {
+    var res = await sb('prayers', 'POST', {topic:topic, sort_order:maxOrder+1, last_used:null});
+    prayers.push(res[0]);
+    document.getElementById('new-prayer').value = '';
+    renderPrayers(); renderPrayerBanner(); renderTWBanner();
+    toast('"' + topic + '" added');
+  } catch(err) { showError(err.message); }
+  btn.disabled = false;
+}
+
+async function markPrayerDone() {
+  var nextP = getNextPrayer();
+  if (!nextP) return;
+  nextP.last_used = today();
+  try {
+    await sb('prayers', 'PATCH', {last_used:today()}, 'id=eq.' + nextP.id);
+    renderPrayerBanner(); renderTWBanner(); renderPrayers();
+    toast('Prayer updated \u2014 ' + nextP.topic);
+  } catch(err) { showError(err.message); }
+}
+
+function populateAddForm() {
+  document.getElementById('ns-date').value = today();
+  document.getElementById('ns-s1').innerHTML = songOpts('', 'opener');
+  document.getElementById('ns-s2').innerHTML = songOpts('', 'closer');
+  document.getElementById('ns-pad').innerHTML = padOpts('');
+  document.getElementById('ns-outfit').innerHTML = outfitOpts('');
+  document.getElementById('ns-prayer').innerHTML = prayerOpts('');
+}
+
+async function saveService() {
+  var date = document.getElementById('ns-date').value;
+  if (!date) { toast('Please pick a date'); return; }
+  var np = getNextPrayer();
+  var svc = {
+    date: date,
+    title: document.getElementById('ns-title').value.trim(),
+    song1: document.getElementById('ns-s1').value,
+    song2: document.getElementById('ns-s2').value,
+    pad: document.getElementById('ns-pad').value,
+    outfit: document.getElementById('ns-outfit').value,
+    status: document.getElementById('ns-status').value,
+    prayer: document.getElementById('ns-prayer').value || (np ? np.topic : '')
+  };
+  var btn = document.getElementById('save-svc-btn'); btn.disabled = true;
+  try {
+    if (svc.status === 'confirmed') {
+      var updates = [];
+      if (svc.song1) { var s = getSong(svc.song1); if (s) { s.last_used = date; updates.push(sb('songs','PATCH',{last_used:date},'id=eq.'+s.id)); } }
+      if (svc.song2) { var s2 = getSong(svc.song2); if (s2) { s2.last_used = date; updates.push(sb('songs','PATCH',{last_used:date},'id=eq.'+s2.id)); } }
+      if (svc.pad) { var p = getPad(svc.pad); if (p) { p.last_used = date; updates.push(sb('pads','PATCH',{last_used:date},'id=eq.'+p.id)); } }
+      if (svc.outfit) { var o = getOutfit(svc.outfit); if (o) { o.last_used = date; updates.push(sb('outfits','PATCH',{last_used:date},'id=eq.'+o.id)); } }
+      if (updates.length) await Promise.all(updates);
+    }
+    var res = await sb('services', 'POST', svc);
+    services.push(res[0]);
+    services.sort(function(a,b) { return a.date.localeCompare(b.date); });
+    document.getElementById('ns-title').value = '';
+    toast('Service saved');
+    showPage('planner', document.getElementById('nav-planner'));
     renderAll();
-  }catch(err){
-    document.getElementById('loading').innerHTML='<div style="text-align:center;padding:40px;color:#c0392b"><div style="font-size:16px;font-weight:600;margin-bottom:8px">Failed to connect</div><div style="font-size:13px;color:#888">'+err.message+'</div></div>';
+  } catch(err) { showError(err.message); }
+  btn.disabled = false;
+}
+
+var PAGE_SUBS = {planner:'Planner', add:'Add Service', songs:'Songs', pads:'Pads', outfits:'Outfits', prayers:'Prayers'};
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(n) { n.classList.remove('active'); });
+  document.getElementById('page-' + id).classList.add('active');
+  btn.classList.add('active');
+  document.getElementById('page-sub').textContent = PAGE_SUBS[id] || id;
+  if (id === 'add') populateAddForm();
+}
+
+function renderAll() {
+  renderTopbar(); renderStats(); renderTWBanner(); renderPrayerBanner();
+  renderTable(); renderSongs(); renderPads(); renderOutfits(); renderPrayers();
+}
+
+async function init() {
+  try {
+    var results = await Promise.all([
+      sb('songs', 'GET', null, 'order=last_used.asc.nullsfirst'),
+      sb('pads', 'GET', null, 'order=last_used.asc.nullsfirst'),
+      sb('outfits', 'GET', null, 'order=last_used.asc.nullsfirst'),
+      sb('services', 'GET', null, 'order=date.asc'),
+      sb('prayers', 'GET', null, 'order=sort_order.asc')
+    ]);
+    songs = results[0]; pads = results[1]; outfits = results[2];
+    services = results[3]; prayers = results[4];
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    renderAll();
+  } catch(err) {
+    document.getElementById('loading').innerHTML = '<div style="text-align:center;padding:40px;color:#c0392b"><div style="font-size:16px;font-weight:600;margin-bottom:8px">Failed to connect</div><div style="font-size:13px;color:#888">' + err.message + '</div></div>';
   }
 }
 
