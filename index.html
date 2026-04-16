@@ -578,31 +578,31 @@ function renderTWBanner() {
   }
 
   var h = '<div class="this-week">';
-  h += '<div class="tw-hdr"><div class="tw-date">This week — ' + fmt(svc.date) + '</div>';
+  h += '<div class="tw-hdr"><div class="tw-date">This week \u2014 ' + fmt(svc.date) + '</div>';
   h += '<span class="tw-badge">Suggested</span></div>';
-  if (svc.title) h += '<div class="tw-msg">“' + esc(svc.title) + '”</div>';
+  if (svc.title) h += '<div class="tw-msg">\u201c' + esc(svc.title) + '\u201d</div>';
   h += '<div class="tw-grid">';
 
   h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Song 1' + skipBtn('song1', song1) + '</div>';
-  h += '<div class="tw-val">' + (song1 || '—') + '</div>';
-  if (s1) h += '<div class="tw-meta">prev. ' + fmtS(s1.last_used) + ' · ' + ago(s1.last_used) + '</div>';
+  h += '<div class="tw-val">' + (song1 || '\u2014') + '</div>';
+  if (s1) h += '<div class="tw-meta">prev. ' + fmtS(s1.last_used) + ' \u00b7 ' + ago(s1.last_used) + '</div>';
   h += '</div>';
 
   h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Song 2' + skipBtn('song2', song2) + '</div>';
-  h += '<div class="tw-val">' + (song2 || '—') + '</div>';
-  if (s2) h += '<div class="tw-meta">prev. ' + fmtS(s2.last_used) + ' · ' + ago(s2.last_used) + '</div>';
+  h += '<div class="tw-val">' + (song2 || '\u2014') + '</div>';
+  if (s2) h += '<div class="tw-meta">prev. ' + fmtS(s2.last_used) + ' \u00b7 ' + ago(s2.last_used) + '</div>';
   h += '</div>';
 
   h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Pad' + skipBtn('pad', pad) + '</div>';
-  h += '<div class="tw-val">' + (pad || '—') + '</div></div>';
+  h += '<div class="tw-val">' + (pad || '\u2014') + '</div></div>';
 
   h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Outfit' + skipBtn('outfit', outfit) + '</div>';
-  h += '<div class="tw-val">' + (outfit || '—') + '</div>';
+  h += '<div class="tw-val">' + (outfit || '\u2014') + '</div>';
   if (ot) h += '<div class="swatches">' + swHtml(ot.colors, 14) + '</div>';
   h += '</div>';
 
   h += '<div><div class="tw-lbl">Prayer</div>';
-  h += '<div class="tw-val">' + (nextP ? esc(nextP.topic) : '—') + '</div></div>';
+  h += '<div class="tw-val">' + (nextP ? esc(nextP.topic) : '\u2014') + '</div></div>';
 
   h += '</div>';
   h += '<div class="tw-hint">Expand the row below to confirm or override. ';
