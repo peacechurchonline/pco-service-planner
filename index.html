@@ -6,6 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="PCO Planner">
 <meta name="theme-color" content="#f7f5f0">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzJhMjYyMCIvPgogIDxyZWN0IHg9IjUiIHk9IjkiIHdpZHRoPSIyMiIgaGVpZ2h0PSIxOCIgcng9IjMiIGZpbGw9IiNjODg2MGEiLz4KICA8cmVjdCB4PSI1IiB5PSI5IiB3aWR0aD0iMjIiIGhlaWdodD0iNyIgcng9IjMiIGZpbGw9IiNlOGEwMjAiLz4KICA8cmVjdCB4PSI1IiB5PSIxMyIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMiIGZpbGw9IiNlOGEwMjAiLz4KICA8bGluZSB4MT0iMTAiIHkxPSI2IiB4Mj0iMTAiIHkyPSIxMiIgc3Ryb2tlPSIjMmEyNjIwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjIyIiB5MT0iNiIgeDI9IjIyIiB5Mj0iMTIiIHN0cm9rZT0iIzJhMjYyMCIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxyZWN0IHg9IjgiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMTQiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC41Ii8+Cjwvc3ZnPg==">
 <title>PCO Worship Service Planner</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -421,6 +422,8 @@ async function sb(table, method, body, query) {
 var songs = [], pads = [], outfits = [], services = [], prayers = [];
 var svcFilter = 'all';
 var openRows = {};
+var editMode = {};
+var skipped = {song1: [], song2: [], pad: [], outfit: []};
 
 var MO = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
 
@@ -497,6 +500,18 @@ function suggest() {
   };
 }
 
+function skipItem(type, value) {
+  if (skipped[type].indexOf(value) === -1) {
+    skipped[type].push(value);
+  }
+  renderTWBanner();
+}
+
+function resetSkips() {
+  skipped = {song1: [], song2: [], pad: [], outfit: []};
+  renderTWBanner();
+}
+
 function songOpts(sel, role) {
   var list = role ? songs.filter(function(s) { return s.role === role; }) : songs;
   var sorted = list.slice().sort(function(a,b) { return a.title.localeCompare(b.title); });
@@ -556,24 +571,42 @@ function renderTWBanner() {
   var outfit = svc.outfit || sg.outfit;
   var s1 = getSong(song1), s2 = getSong(song2), ot = getOutfit(outfit);
   var nextP = getNextPrayer();
+
+  function skipBtn(type, val) {
+    if (!val) return '';
+    return '<button onclick="' + 'skipItem(' + JSON.stringify(type) + ',' + JSON.stringify(val) + ')' + '" style="font-size:10px;padding:2px 8px;border-radius:6px;border:1px solid var(--border2);background:none;color:var(--ink3);cursor:pointer;margin-left:6px">Skip</button>';
+  }
+
   var h = '<div class="this-week">';
-  h += '<div class="tw-hdr"><div class="tw-date">This week \u2014 ' + fmt(svc.date) + '</div>';
+  h += '<div class="tw-hdr"><div class="tw-date">This week — ' + fmt(svc.date) + '</div>';
   h += '<span class="tw-badge">Suggested</span></div>';
-  if (svc.title) h += '<div class="tw-msg">\u201c' + esc(svc.title) + '\u201d</div>';
+  if (svc.title) h += '<div class="tw-msg">“' + esc(svc.title) + '”</div>';
   h += '<div class="tw-grid">';
-  h += '<div><div class="tw-lbl">Song 1</div><div class="tw-val">' + (song1 || '\u2014') + '</div>';
-  if (s1) h += '<div class="tw-meta">prev. ' + fmtS(s1.last_used) + ' \u00b7 ' + ago(s1.last_used) + '</div>';
+
+  h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Song 1' + skipBtn('song1', song1) + '</div>';
+  h += '<div class="tw-val">' + (song1 || '—') + '</div>';
+  if (s1) h += '<div class="tw-meta">prev. ' + fmtS(s1.last_used) + ' · ' + ago(s1.last_used) + '</div>';
   h += '</div>';
-  h += '<div><div class="tw-lbl">Song 2</div><div class="tw-val">' + (song2 || '\u2014') + '</div>';
-  if (s2) h += '<div class="tw-meta">prev. ' + fmtS(s2.last_used) + ' \u00b7 ' + ago(s2.last_used) + '</div>';
+
+  h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Song 2' + skipBtn('song2', song2) + '</div>';
+  h += '<div class="tw-val">' + (song2 || '—') + '</div>';
+  if (s2) h += '<div class="tw-meta">prev. ' + fmtS(s2.last_used) + ' · ' + ago(s2.last_used) + '</div>';
   h += '</div>';
-  h += '<div><div class="tw-lbl">Pad</div><div class="tw-val">' + (pad || '\u2014') + '</div></div>';
-  h += '<div><div class="tw-lbl">Outfit</div><div class="tw-val">' + (outfit || '\u2014') + '</div>';
+
+  h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Pad' + skipBtn('pad', pad) + '</div>';
+  h += '<div class="tw-val">' + (pad || '—') + '</div></div>';
+
+  h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Outfit' + skipBtn('outfit', outfit) + '</div>';
+  h += '<div class="tw-val">' + (outfit || '—') + '</div>';
   if (ot) h += '<div class="swatches">' + swHtml(ot.colors, 14) + '</div>';
   h += '</div>';
-  h += '<div><div class="tw-lbl">Prayer</div><div class="tw-val">' + (nextP ? esc(nextP.topic) : '\u2014') + '</div></div>';
+
+  h += '<div><div class="tw-lbl">Prayer</div>';
+  h += '<div class="tw-val">' + (nextP ? esc(nextP.topic) : '—') + '</div></div>';
+
   h += '</div>';
-  h += '<div class="tw-hint">Expand the row below to confirm or override.</div>';
+  h += '<div class="tw-hint">Expand the row below to confirm or override. ';
+  h += '<button onclick="resetSkips()" style="font-size:11px;font-weight:600;color:var(--amber);background:none;border:none;cursor:pointer;text-decoration:underline">Reset skips</button></div>';
   h += '</div>';
   el.innerHTML = h;
 }
@@ -624,7 +657,7 @@ function renderTable() {
 
     // Song 1
     exp += '<div><div class="exp-lbl">Song 1</div>';
-    if (svc.status === 'upcoming') {
+    if (svc.status === 'upcoming' || editMode[svc.id]) {
       exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="song1" onchange="updateSvcFromEl(this)">' + songOpts(svc.song1, 'opener') + '</select>';
     } else {
       exp += '<div class="exp-val' + (svc.song1 ? '' : ' empty') + '">' + (svc.song1 || 'not set') + '</div>';
@@ -634,7 +667,7 @@ function renderTable() {
 
     // Song 2
     exp += '<div><div class="exp-lbl">Song 2</div>';
-    if (svc.status === 'upcoming') {
+    if (svc.status === 'upcoming' || editMode[svc.id]) {
       exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="song2" onchange="updateSvcFromEl(this)">' + songOpts(svc.song2, 'closer') + '</select>';
     } else {
       exp += '<div class="exp-val' + (svc.song2 ? '' : ' empty') + '">' + (svc.song2 || 'not set') + '</div>';
@@ -644,7 +677,7 @@ function renderTable() {
 
     // Pad
     exp += '<div><div class="exp-lbl">Pad</div>';
-    if (svc.status === 'upcoming') {
+    if (svc.status === 'upcoming' || editMode[svc.id]) {
       exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="pad" onchange="updateSvcFromEl(this)">' + padOpts(svc.pad) + '</select>';
     } else {
       exp += '<div class="exp-val' + (svc.pad ? '' : ' empty') + '">' + (svc.pad || '\u2014') + '</div>';
@@ -653,7 +686,7 @@ function renderTable() {
 
     // Outfit
     exp += '<div><div class="exp-lbl">Outfit</div>';
-    if (svc.status === 'upcoming') {
+    if (svc.status === 'upcoming' || editMode[svc.id]) {
       exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="outfit" onchange="updateSvcFromEl(this)">' + outfitOpts(svc.outfit) + '</select>';
     } else {
       exp += '<div class="exp-val' + (svc.outfit ? '' : ' empty') + '">' + (svc.outfit || '\u2014') + '</div>';
@@ -663,15 +696,15 @@ function renderTable() {
 
     // Prayer
     exp += '<div><div class="exp-lbl">Prayer focus</div>';
-    if (svc.status === 'upcoming') {
+    if (svc.status === 'upcoming' || editMode[svc.id]) {
       exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="prayer" onchange="updateSvcFromEl(this)">' + prayerOpts(svc.prayer) + '</select>';
     } else {
       exp += '<div class="exp-val' + (svc.prayer ? '' : ' empty') + '">' + (svc.prayer || 'not recorded') + '</div>';
     }
     exp += '</div>';
 
-    // Title (upcoming only)
-    if (svc.status === 'upcoming') {
+    // Title (upcoming and edit mode)
+    if (svc.status === 'upcoming' || editMode[svc.id]) {
       exp += '<div style="grid-column:1/-1"><div class="exp-lbl">Message title</div>';
       exp += '<input class="exp-inp" placeholder="Add title\u2026" value="' + esc(svc.title || '') + '" data-id="' + svc.id + '" data-field="title" onchange="updateSvcFromEl(this)"/>';
       exp += '</div>';
@@ -682,7 +715,13 @@ function renderTable() {
     if (svc.status === 'upcoming') {
       exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="confirmSvc(this.dataset.id, event)">\u2713 Confirm this week</button>';
     } else if (svc.status === 'confirmed') {
-      exp += '<button class="exp-btn" data-id="' + svc.id + '" onclick="unconfirmSvc(this.dataset.id, event)">Move to upcoming</button>';
+      if (editMode[svc.id]) {
+        exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="saveEdit(this.dataset.id, event)">Save changes</button>';
+        exp += '<button class="exp-btn" data-id="' + svc.id + '" onclick="cancelEdit(this.dataset.id, event)">Cancel</button>';
+      } else {
+        exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="editSvc(this.dataset.id, event)">Edit</button>';
+        exp += '<button class="exp-btn" data-id="' + svc.id + '" onclick="unconfirmSvc(this.dataset.id, event)">Move to upcoming</button>';
+      }
     } else {
       exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="confirmSvc(this.dataset.id, event)">\u2713 Confirm</button>';
     }
@@ -698,6 +737,31 @@ function renderTable() {
 
 function toggleRow(id) {
   openRows[id] = !openRows[id];
+  renderTable();
+}
+
+function editSvc(id, e) {
+  e.stopPropagation();
+  editMode[id] = true;
+  openRows[id] = true;
+  renderTable();
+}
+
+async function saveEdit(id, e) {
+  e.stopPropagation();
+  editMode[id] = false;
+  var svc = services.find(function(s) { return s.id === id; });
+  if (!svc) return;
+  try {
+    await sb('services', 'PATCH', {title:svc.title, song1:svc.song1, song2:svc.song2, pad:svc.pad, outfit:svc.outfit, prayer:svc.prayer}, 'id=eq.' + id);
+    renderAll();
+    toast('Saved');
+  } catch(err) { showError(err.message); }
+}
+
+function cancelEdit(id, e) {
+  e.stopPropagation();
+  editMode[id] = false;
   renderTable();
 }
 
