@@ -574,7 +574,7 @@ function renderTWBanner() {
 
   function skipBtn(type, val) {
     if (!val) return '';
-    return '<button onclick="' + 'skipItem(' + JSON.stringify(type) + ',' + JSON.stringify(val) + ')' + '" style="font-size:10px;padding:2px 8px;border-radius:6px;border:1px solid var(--border2);background:none;color:var(--ink3);cursor:pointer;margin-left:6px">Skip</button>';
+    return '<button class="skip-btn" data-type="' + type + '" data-val="' + esc(val) + '" style="font-size:10px;padding:2px 8px;border-radius:6px;border:1px solid var(--border2);background:none;color:var(--ink3);cursor:pointer;margin-left:6px">Skip</button>';
   }
 
   var h = '<div class="this-week">';
@@ -1025,6 +1025,14 @@ async function init() {
 }
 
 init();
+
+document.addEventListener('click', function(e) {
+  if (e.target.classList.contains('skip-btn')) {
+    var type = e.target.dataset.type;
+    var val = e.target.dataset.val;
+    skipItem(type, val);
+  }
+});
 </script>
 </body>
 </html>
