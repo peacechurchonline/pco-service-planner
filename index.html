@@ -4,1035 +4,869 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="PCO Planner">
 <meta name="theme-color" content="#f7f5f0">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzJhMjYyMCIvPgogIDxyZWN0IHg9IjUiIHk9IjkiIHdpZHRoPSIyMiIgaGVpZ2h0PSIxOCIgcng9IjMiIGZpbGw9IiNjODg2MGEiLz4KICA8cmVjdCB4PSI1IiB5PSI5IiB3aWR0aD0iMjIiIGhlaWdodD0iNyIgcng9IjMiIGZpbGw9IiNlOGEwMjAiLz4KICA8cmVjdCB4PSI1IiB5PSIxMyIgd2lkdGg9IjIyIiBoZWlnaHQ9IjMiIGZpbGw9IiNlOGEwMjAiLz4KICA8bGluZSB4MT0iMTAiIHkxPSI2IiB4Mj0iMTAiIHkyPSIxMiIgc3Ryb2tlPSIjMmEyNjIwIiBzdHJva2Utd2lkdGg9IjIuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPGxpbmUgeDE9IjIyIiB5MT0iNiIgeDI9IjIyIiB5Mj0iMTIiIHN0cm9rZT0iIzJhMjYyMCIgc3Ryb2tlLXdpZHRoPSIyLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDxyZWN0IHg9IjgiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMTQiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC45Ii8+CiAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iNCIgaGVpZ2h0PSI0IiByeD0iMSIgZmlsbD0iI2ZmZiIgb3BhY2l0eT0iMC41Ii8+Cjwvc3ZnPg==">
 <title>PCO Worship Service Planner</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-@font-face{font-family:'SSNicksonOne';src:url('S_S_Nickson_One.otf') format('opentype');}
-:root{
-  --bg:#f7f5f0;--bg2:#eeeae2;--bg3:#e4dfd5;
-  --card:#ffffff;--card2:#faf8f5;
-  --border:#ddd8ce;--border2:#c8c2b6;
-  --ink:#2a2620;--ink2:#5a5248;--ink3:#9a9088;
-  --amber:#c8860a;--amber-bg:#fef3dc;--amber-dim:rgba(200,134,10,0.12);
-  --green:#2d7a4f;--green-bg:#eaf5ef;--green-dim:rgba(45,122,79,0.12);
-  --red:#c0392b;--red-bg:#fdecea;
-  --teal:#1a7a7a;--teal-bg:#e6f5f5;
-  --blue:#2563a8;--blue-bg:#e8f0fb;
-  --sidebar:220px;
+@font-face { font-family: SSN; src: url('S_S_Nickson_One.otf') format('opentype'); }
+:root {
+  --bg:#f7f5f0; --bg2:#eeeae2; --card:#fff; --card2:#faf8f5;
+  --border:#ddd8ce; --border2:#c8c2b6;
+  --ink:#2a2620; --ink2:#5a5248; --ink3:#9a9088;
+  --amber:#c8860a; --abg:#fef3dc;
+  --green:#2d7a4f; --gbg:#eaf5ef;
+  --red:#c0392b; --rbg:#fdecea;
+  --teal:#1a7a7a; --tbg:#e6f5f5;
+  --blue:#2563a8; --bbg:#e8f0fb;
+  --sw: 220px;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:14px;line-height:1.5}
-.shell{display:flex;min-height:100vh}
+* { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+body { font-family:'Inter',sans-serif; background:var(--bg); color:var(--ink); min-height:100vh; font-size:14px; line-height:1.5; }
+.shell { display:flex; min-height:100vh; }
 
 /* SIDEBAR */
-.sidebar{width:var(--sidebar);flex-shrink:0;background:var(--ink);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:100}
-.sidebar-brand{padding:28px 20px 20px;border-bottom:1px solid rgba(255,255,255,0.08)}
-.brand-cross{font-size:18px;color:var(--amber);text-shadow:0 0 12px rgba(200,134,10,0.5);margin-bottom:8px;display:block}
-.brand-name{font-family:'SSNicksonOne','Lora',serif;font-size:16px;color:#fff;line-height:1.2}
-.brand-name span{color:var(--amber)}
-.brand-sub{font-size:10px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px}
-.sidebar-nav{flex:1;padding:16px 0}
-.nav-section{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.25);padding:12px 20px 6px}
-.nav-btn{width:100%;display:flex;align-items:center;gap:10px;padding:10px 20px;border:none;background:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;color:rgba(255,255,255,0.5);text-align:left;transition:all 0.15s;border-left:2px solid transparent}
-.nav-btn:hover{color:rgba(255,255,255,0.85);background:rgba(255,255,255,0.04)}
-.nav-btn.active{color:#fff;background:rgba(255,255,255,0.07);border-left-color:var(--amber)}
-.nav-btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.sidebar-foot{padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);font-size:11px;color:rgba(255,255,255,0.22);line-height:1.7}
+.sidebar { width:var(--sw); flex-shrink:0; background:var(--ink); display:flex; flex-direction:column; position:fixed; top:0; bottom:0; left:0; z-index:100; }
+.sb-brand { padding:28px 20px 20px; border-bottom:1px solid rgba(255,255,255,0.08); }
+.sb-cross { font-size:18px; color:var(--amber); display:block; margin-bottom:8px; }
+.sb-name { font-family:SSN,'Lora',serif; font-size:16px; color:#fff; line-height:1.2; }
+.sb-name span { color:var(--amber); }
+.sb-sub { font-size:10px; color:rgba(255,255,255,0.3); text-transform:uppercase; letter-spacing:0.1em; margin-top:4px; }
+.sb-nav { flex:1; padding:16px 0; }
+.sb-sec { font-size:9px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.25); padding:12px 20px 6px; }
+.nb { width:100%; display:flex; align-items:center; gap:10px; padding:10px 20px; border:none; background:none; cursor:pointer; font-family:'Inter',sans-serif; font-size:13px; font-weight:500; color:rgba(255,255,255,0.5); text-align:left; border-left:2px solid transparent; transition:all 0.15s; }
+.nb:hover { color:rgba(255,255,255,0.85); background:rgba(255,255,255,0.04); }
+.nb.on { color:#fff; background:rgba(255,255,255,0.07); border-left-color:var(--amber); }
+.nb svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+.sb-foot { padding:16px 20px; border-top:1px solid rgba(255,255,255,0.08); font-size:11px; color:rgba(255,255,255,0.22); line-height:1.7; }
 
 /* MAIN */
-.main{margin-left:var(--sidebar);flex:1;display:flex;flex-direction:column;min-height:100vh}
-.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.topbar-left{}
-.page-title{font-family:'SSNicksonOne','Lora',serif;font-size:25px;color:var(--ink)}
-.page-sub{font-size:11px;color:var(--ink3);margin-top:2px}
-.topbar-right{font-size:12px;color:var(--ink3);text-align:right;line-height:1.7}
-.topbar-right strong{color:var(--ink2);font-weight:600}
-.content{padding:28px 32px;flex:1}
-.page{display:none}.page.active{display:block}
+.main { margin-left:var(--sw); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+.topbar { background:var(--card); border-bottom:1px solid var(--border); padding:16px 32px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:50; }
+.pt { font-family:SSN,'Lora',serif; font-size:25px; color:var(--ink); }
+.ps { font-size:11px; color:var(--ink3); margin-top:2px; }
+.tr { font-size:12px; color:var(--ink3); text-align:right; line-height:1.7; }
+.tr strong { color:var(--ink2); font-weight:600; }
+.content { padding:28px 32px; flex:1; }
+.page { display:none; } .page.on { display:block; }
 
 /* LOADING */
-.loading-overlay{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:999;flex-direction:column;gap:12px}
-.spinner{width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin 0.8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-.loading-text{font-size:13px;color:var(--ink3)}
+.loader { position:fixed; inset:0; background:var(--bg); display:flex; align-items:center; justify-content:center; z-index:999; flex-direction:column; gap:12px; }
+.spin { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--amber); border-radius:50%; animation:sp 0.8s linear infinite; }
+@keyframes sp { to { transform:rotate(360deg); } }
+.lt { font-size:13px; color:var(--ink3); }
 
-/* SECTION LABELS */
-.slabel{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink3);margin:24px 0 12px;display:flex;align-items:center;gap:10px}
-.slabel::after{content:'';flex:1;height:1px;background:var(--border)}
-.slabel:first-child{margin-top:0}
+/* UTILS */
+.slabel { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--ink3); margin:24px 0 12px; display:flex; align-items:center; gap:10px; }
+.slabel::after { content:''; flex:1; height:1px; background:var(--border); }
+.slabel:first-child { margin-top:0; }
+.info { font-size:12px; color:var(--ink3); line-height:1.6; background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:10px 14px; margin-bottom:14px; }
+.err { background:var(--rbg); border:1px solid rgba(192,57,43,0.3); border-radius:10px; padding:12px 16px; font-size:13px; color:var(--red); margin-bottom:16px; display:none; }
+.toast { position:fixed; bottom:24px; right:24px; background:var(--ink); color:#fff; border-radius:10px; padding:10px 18px; font-size:13px; font-weight:500; opacity:0; transition:all 0.3s; pointer-events:none; z-index:999; }
+.toast.show { opacity:1; }
 
 /* STATS */
-.stats{display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap}
-.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;flex:1;min-width:110px}
-.stat-n{font-size:28px;font-weight:600;color:var(--amber);line-height:1;font-family:'Lora',serif}
-.stat-l{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:0.07em;margin-top:4px;font-weight:500}
+.stats { display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.stat { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:16px 20px; flex:1; min-width:110px; }
+.sn { font-size:28px; font-weight:600; color:var(--amber); line-height:1; font-family:'Lora',serif; }
+.sl { font-size:11px; color:var(--ink3); text-transform:uppercase; letter-spacing:0.07em; margin-top:4px; font-weight:500; }
 
-/* THIS WEEK BANNER */
-.this-week{background:var(--amber-bg);border:1px solid rgba(200,134,10,0.25);border-radius:14px;padding:18px 20px;margin-bottom:16px}
-.tw-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.tw-date{font-family:'Lora',serif;font-size:16px;font-weight:600;color:var(--amber)}
-.tw-badge{font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;background:rgba(200,134,10,0.15);color:var(--amber);border:1px solid rgba(200,134,10,0.3);padding:3px 10px;border-radius:20px}
-.tw-msg{font-size:13px;color:var(--ink2);font-style:italic;margin-bottom:14px;line-height:1.4}
-.tw-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
-.tw-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--ink3);margin-bottom:4px}
-.tw-val{font-size:13px;font-weight:500;color:var(--ink)}
-.tw-meta{font-size:11px;color:var(--ink3);margin-top:2px}
-.tw-hint{font-size:11px;color:var(--ink3);font-style:italic;margin-top:12px}
-.swatches{display:flex;gap:3px;margin-top:4px}
-.sw{border-radius:3px;border:1px solid rgba(0,0,0,0.1)}
+/* THIS WEEK */
+.tw { background:var(--abg); border:1px solid rgba(200,134,10,0.25); border-radius:14px; padding:18px 20px; margin-bottom:16px; }
+.tw-hdr { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.tw-date { font-family:'Lora',serif; font-size:16px; font-weight:600; color:var(--amber); }
+.tw-badge { font-size:10px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; background:rgba(200,134,10,0.15); color:var(--amber); border:1px solid rgba(200,134,10,0.3); padding:3px 10px; border-radius:20px; }
+.tw-msg { font-size:13px; color:var(--ink2); font-style:italic; margin-bottom:14px; line-height:1.4; }
+.tw-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+.tw-lbl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--ink3); margin-bottom:6px; display:flex; align-items:center; gap:6px; }
+.tw-val { font-size:13px; font-weight:500; color:var(--ink); }
+.tw-meta { font-size:11px; color:var(--ink3); margin-top:2px; }
+.tw-hint { font-size:11px; color:var(--ink3); font-style:italic; margin-top:12px; }
+.skip { font-size:10px; padding:2px 7px; border-radius:5px; border:1px solid var(--border2); background:none; color:var(--ink3); cursor:pointer; font-family:'Inter',sans-serif; }
+.skip:hover { background:var(--bg2); }
+.rl { font-size:11px; font-weight:600; color:var(--amber); background:none; border:none; cursor:pointer; text-decoration:underline; font-family:'Inter',sans-serif; }
 
 /* PRAYER BANNER */
-.prayer-banner{background:var(--teal-bg);border:1px solid rgba(26,122,122,0.2);border-radius:14px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.prayer-left{}
-.prayer-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--teal);margin-bottom:4px}
-.prayer-topic{font-size:16px;font-weight:600;color:var(--ink)}
-.prayer-last{font-size:11px;color:var(--ink3);margin-top:2px}
-.prayer-done-btn{font-size:12px;font-weight:600;padding:8px 16px;border-radius:8px;border:1px solid rgba(26,122,122,0.3);background:rgba(26,122,122,0.1);color:var(--teal);cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all 0.15s;flex-shrink:0}
-.prayer-done-btn:hover{background:rgba(26,122,122,0.2)}
+.pb { background:var(--tbg); border:1px solid rgba(26,122,122,0.2); border-radius:14px; padding:14px 16px; margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.pb-lbl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--teal); margin-bottom:4px; }
+.pb-topic { font-size:16px; font-weight:600; color:var(--ink); }
+.pb-last { font-size:11px; color:var(--ink3); margin-top:2px; }
+.pb-btn { font-size:12px; font-weight:600; padding:8px 16px; border-radius:8px; border:1px solid rgba(26,122,122,0.3); background:rgba(26,122,122,0.1); color:var(--teal); cursor:pointer; font-family:'Inter',sans-serif; white-space:nowrap; }
+.pb-btn:hover { background:rgba(26,122,122,0.2); }
 
 /* CHIPS */
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
-.chip{font-size:12px;font-weight:500;padding:5px 14px;border-radius:20px;border:1px solid var(--border2);color:var(--ink3);background:var(--card);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
-.chip:hover{border-color:var(--amber);color:var(--amber)}
-.chip.active{background:var(--amber-bg);color:var(--amber);border-color:rgba(200,134,10,0.4)}
+.chips { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px; }
+.chip { font-size:12px; font-weight:500; padding:5px 14px; border-radius:20px; border:1px solid var(--border2); color:var(--ink3); background:var(--card); cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.15s; }
+.chip:hover { border-color:var(--amber); color:var(--amber); }
+.chip.on { background:var(--abg); color:var(--amber); border-color:rgba(200,134,10,0.4); }
 
-/* SERVICE TABLE */
-.tbl-wrap{overflow-x:auto;border-radius:12px;border:1px solid var(--border)}
-table.svc{width:100%;border-collapse:collapse}
-table.svc th{font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink3);padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);background:var(--bg2);white-space:nowrap}
-.svc-row{border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.1s}
-.svc-row:hover,.svc-row.open{background:var(--bg2)}
-.svc-row td{padding:11px 14px;font-size:13px;vertical-align:middle}
-.td-date{font-weight:600;color:var(--amber);font-size:12px;white-space:nowrap}
-.td-title{font-weight:500;color:var(--ink);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.td-title.empty{color:var(--ink3);font-style:italic;font-weight:400}
-.td-song{color:var(--ink2);font-size:12px}
-.td-pad{color:var(--teal);font-size:12px;font-weight:500}
-.td-outfit{display:flex;align-items:center;gap:5px}
-.pill{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap}
-.pill-confirmed{background:var(--green-bg);color:var(--green);border:1px solid rgba(45,122,79,0.2)}
-.pill-upcoming{background:var(--amber-bg);color:var(--amber);border:1px solid rgba(200,134,10,0.2)}
-.pill-draft{background:var(--bg2);color:var(--ink3);border:1px solid var(--border)}
-.next-tag{font-size:9px;font-weight:600;padding:2px 6px;border-radius:6px;background:var(--amber-bg);color:var(--amber);border:1px solid rgba(200,134,10,0.3);text-transform:uppercase;letter-spacing:0.05em;margin-left:5px}
+/* TABLE */
+.tbl-wrap { overflow-x:auto; border-radius:12px; border:1px solid var(--border); }
+table.svc { width:100%; border-collapse:collapse; }
+table.svc th { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink3); padding:10px 14px; text-align:left; border-bottom:2px solid var(--border); background:var(--bg2); white-space:nowrap; }
+.sr { border-bottom:1px solid var(--border); cursor:pointer; transition:background 0.1s; }
+.sr:hover, .sr.open { background:var(--bg2); }
+.sr td { padding:11px 14px; font-size:13px; vertical-align:middle; }
+.td-d { font-weight:600; color:var(--amber); font-size:12px; white-space:nowrap; }
+.td-t { font-weight:500; color:var(--ink); max-width:200px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.td-t.em { color:var(--ink3); font-style:italic; font-weight:400; }
+.td-s { color:var(--ink2); font-size:12px; }
+.td-p { color:var(--teal); font-size:12px; font-weight:500; }
+.td-o { display:flex; align-items:center; gap:5px; }
+.pill { font-size:10px; font-weight:600; padding:2px 8px; border-radius:10px; text-transform:uppercase; letter-spacing:0.05em; white-space:nowrap; }
+.p-c { background:var(--gbg); color:var(--green); border:1px solid rgba(45,122,79,0.2); }
+.p-u { background:var(--abg); color:var(--amber); border:1px solid rgba(200,134,10,0.2); }
+.p-d { background:var(--bg2); color:var(--ink3); border:1px solid var(--border); }
+.nt { font-size:9px; font-weight:600; padding:2px 6px; border-radius:6px; background:var(--abg); color:var(--amber); border:1px solid rgba(200,134,10,0.3); text-transform:uppercase; margin-left:5px; }
 
-/* EXPAND ROW */
-.exp-row{display:none}
-.exp-row.open{display:table-row}
-.exp-row td{padding:0}
-.exp-inner{padding:16px 20px;background:var(--card2);border-bottom:2px solid var(--border)}
-.exp-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:14px}
-.exp-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.09em;color:var(--ink3);margin-bottom:5px}
-.exp-val{font-size:13px;color:var(--ink);font-weight:500}
-.exp-val.empty{color:var(--ink3);font-style:italic;font-weight:400}
-.exp-meta{font-size:11px;color:var(--ink3);margin-top:2px}
-.exp-meta strong{color:var(--ink2)}
-.exp-sel,.exp-inp{width:100%;font-size:12px;padding:7px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--card);color:var(--ink);font-family:'Inter',sans-serif;margin-top:4px}
-.exp-inp::placeholder{color:var(--ink3)}
-.exp-sel:focus,.exp-inp:focus{outline:none;border-color:var(--amber)}
-.exp-actions{display:flex;gap:8px;border-top:1px solid var(--border);padding-top:12px}
-.exp-btn{padding:7px 16px;border-radius:8px;font-size:12px;font-weight:600;border:1px solid var(--border2);background:var(--card);color:var(--ink2);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.15s}
-.exp-btn:hover{background:var(--bg2)}
-.exp-btn.primary{background:var(--amber-bg);color:var(--amber);border-color:rgba(200,134,10,0.35)}
-.exp-btn.danger{color:var(--red);border-color:rgba(192,57,43,0.2)}
-.exp-btn.danger:hover{background:var(--red-bg)}
-.exp-btn:disabled{opacity:0.5;cursor:not-allowed}
+/* EXPAND */
+.er { display:none; } .er.open { display:table-row; }
+.er td { padding:0; }
+.ei { padding:16px 20px; background:var(--card2); border-bottom:2px solid var(--border); }
+.eg { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:14px; }
+.el { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.09em; color:var(--ink3); margin-bottom:5px; }
+.ev { font-size:13px; color:var(--ink); font-weight:500; }
+.ev.em { color:var(--ink3); font-style:italic; font-weight:400; }
+.em2 { font-size:11px; color:var(--ink3); margin-top:2px; }
+.em2 strong { color:var(--ink2); }
+.esel, .einp { width:100%; font-size:12px; padding:7px 10px; border:1px solid var(--border2); border-radius:8px; background:var(--card); color:var(--ink); font-family:'Inter',sans-serif; margin-top:4px; }
+.einp::placeholder { color:var(--ink3); }
+.ea { display:flex; gap:8px; border-top:1px solid var(--border); padding-top:12px; }
+.eb { padding:7px 16px; border-radius:8px; font-size:12px; font-weight:600; border:1px solid var(--border2); background:var(--card); color:var(--ink2); cursor:pointer; font-family:'Inter',sans-serif; transition:all 0.15s; }
+.eb:hover { background:var(--bg2); }
+.eb.pr { background:var(--abg); color:var(--amber); border-color:rgba(200,134,10,0.35); }
+.eb.dn { color:var(--red); border-color:rgba(192,57,43,0.2); }
+.eb.dn:hover { background:var(--rbg); }
 
-/* LIST CARDS */
-.list-card{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:12px}
-.list-row{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--border);transition:background 0.1s}
-.list-row:last-child{border-bottom:none}
-.list-row:hover{background:var(--bg2)}
-.list-section{padding:7px 16px;background:var(--bg2);border-bottom:1px solid var(--border);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink3)}
-.row-rank{width:22px;height:22px;border-radius:50%;background:var(--amber-bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--amber);flex-shrink:0}
-.row-info{flex:1;min-width:0}
-.row-name{font-size:13px;font-weight:500;color:var(--ink)}
-.row-last{font-size:11px;color:var(--ink3);margin-top:2px}
-.row-last strong{color:var(--ink2);font-weight:600}
-.row-badge{font-size:11px;font-weight:600;padding:3px 9px;border-radius:8px;background:var(--blue-bg);color:var(--blue);flex-shrink:0}
-.role-opener{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;background:#fff3e0;color:#c85000;border:1px solid rgba(200,80,0,0.2);margin-left:6px}
-.role-closer{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;background:var(--blue-bg);color:var(--blue);border:1px solid rgba(37,99,168,0.2);margin-left:6px}
-.pad-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+/* LISTS */
+.lc { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:12px; }
+.lsh { padding:7px 16px; background:var(--bg2); border-bottom:1px solid var(--border); font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink3); }
+.lr { display:flex; align-items:center; gap:12px; padding:11px 16px; border-bottom:1px solid var(--border); transition:background 0.1s; }
+.lr:last-child { border-bottom:none; }
+.lr:hover { background:var(--bg2); }
+.rr { width:22px; height:22px; border-radius:50%; background:var(--abg); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--amber); flex-shrink:0; }
+.ri { flex:1; min-width:0; }
+.rn { font-size:13px; font-weight:500; color:var(--ink); }
+.rl2 { font-size:11px; color:var(--ink3); margin-top:2px; }
+.rl2 strong { color:var(--ink2); font-weight:600; }
+.rb { font-size:11px; font-weight:600; padding:3px 9px; border-radius:8px; background:var(--bbg); color:var(--blue); flex-shrink:0; }
+.ro { font-size:10px; font-weight:600; padding:2px 7px; border-radius:8px; background:#fff3e0; color:#c85000; border:1px solid rgba(200,80,0,0.2); margin-left:6px; }
+.rc { font-size:10px; font-weight:600; padding:2px 7px; border-radius:8px; background:var(--bbg); color:var(--blue); border:1px solid rgba(37,99,168,0.2); margin-left:6px; }
+.pd { width:10px; height:10px; border-radius:3px; flex-shrink:0; }
 
 /* ADD BAR */
-.add-bar{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin-bottom:12px}
-.add-bar input,.add-bar select{flex:1;font-size:13px;padding:7px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif}
-.add-bar input::placeholder{color:var(--ink3)}
-.add-bar input:focus,.add-bar select:focus{outline:none;border-color:var(--amber)}
-.narrow{max-width:80px!important;flex:none!important}
-.add-btn{font-size:12px;font-weight:600;padding:7px 16px;border-radius:8px;border:1px solid rgba(200,134,10,0.4);background:var(--amber-bg);color:var(--amber);cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap;transition:all 0.15s}
-.add-btn:hover{background:rgba(200,134,10,0.2)}
-.add-btn:disabled{opacity:0.5;cursor:not-allowed}
+.ab { display:flex; gap:8px; align-items:center; background:var(--card); border:1px solid var(--border); border-radius:10px; padding:10px 14px; margin-bottom:12px; }
+.ab input, .ab select { flex:1; font-size:13px; padding:7px 10px; border:1px solid var(--border2); border-radius:8px; background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; }
+.ab input::placeholder { color:var(--ink3); }
+.ab input:focus, .ab select:focus { outline:none; border-color:var(--amber); }
+.nw { max-width:80px!important; flex:none!important; }
+.adb { font-size:12px; font-weight:600; padding:7px 16px; border-radius:8px; border:1px solid rgba(200,134,10,0.4); background:var(--abg); color:var(--amber); cursor:pointer; font-family:'Inter',sans-serif; white-space:nowrap; }
+.adb:hover { background:rgba(200,134,10,0.2); }
 
-/* OUTFIT GRID */
-.outfit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin-bottom:20px}
-.outfit-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;transition:border-color 0.15s}
-.outfit-card:hover{border-color:var(--border2)}
-.outfit-swatches{display:flex;gap:4px;margin-bottom:10px}
-.outfit-swatch{width:24px;height:24px;border-radius:6px;border:1px solid rgba(0,0,0,0.1)}
-.outfit-name{font-size:13px;font-weight:500;color:var(--ink);line-height:1.3;margin-bottom:4px}
-.outfit-meta{font-size:11px;color:var(--ink3)}
-.outfit-meta strong{color:var(--ink2)}
+/* OUTFITS */
+.og { display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr)); gap:12px; margin-bottom:20px; }
+.oc { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; }
+.oc:hover { border-color:var(--border2); }
+.osw { display:flex; gap:4px; margin-bottom:10px; }
+.osw div { width:24px; height:24px; border-radius:6px; border:1px solid rgba(0,0,0,0.1); }
+.on2 { font-size:13px; font-weight:500; color:var(--ink); line-height:1.3; margin-bottom:4px; }
+.om { font-size:11px; color:var(--ink3); }
+.om strong { color:var(--ink2); }
 
 /* PANEL / FORM */
-.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;max-width:580px}
-.panel h3{font-family:'Lora',serif;font-size:17px;color:var(--ink);margin-bottom:20px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.frow{margin-bottom:14px}
-.frow.full{grid-column:1/-1}
-.flbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.09em;color:var(--ink3);margin-bottom:6px}
-.finput{width:100%;font-size:13px;padding:9px 12px;border:1px solid var(--border2);border-radius:9px;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif;transition:border-color 0.15s}
-.finput:focus{outline:none;border-color:var(--amber)}
-.finput::placeholder{color:var(--ink3)}
-.save-btn{padding:10px 28px;border-radius:9px;font-size:13px;font-weight:600;border:none;background:var(--amber);color:#fff;cursor:pointer;font-family:'Inter',sans-serif;transition:opacity 0.15s}
-.save-btn:hover{opacity:0.9}
-.save-btn:disabled{opacity:0.5;cursor:not-allowed}
-
-/* INFO NOTE */
-.info-note{font-size:12px;color:var(--ink3);line-height:1.6;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:14px}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:#fff;border-radius:10px;padding:10px 18px;font-size:13px;font-weight:500;opacity:0;transition:all 0.3s;pointer-events:none;z-index:999}
-.toast.show{opacity:1}
-
-/* ERROR */
-.error-msg{background:var(--red-bg);border:1px solid rgba(192,57,43,0.3);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--red);margin-bottom:16px;display:none}
+.panel { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:24px; max-width:580px; }
+.panel h3 { font-family:'Lora',serif; font-size:17px; color:var(--ink); margin-bottom:20px; }
+.fg { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.fr { margin-bottom:14px; }
+.fr.full { grid-column:1/-1; }
+.fl { font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.09em; color:var(--ink3); margin-bottom:6px; }
+.fi { width:100%; font-size:13px; padding:9px 12px; border:1px solid var(--border2); border-radius:9px; background:var(--bg); color:var(--ink); font-family:'Inter',sans-serif; transition:border-color 0.15s; }
+.fi:focus { outline:none; border-color:var(--amber); }
+.fi::placeholder { color:var(--ink3); }
+.sb { padding:10px 28px; border-radius:9px; font-size:13px; font-weight:600; border:none; background:var(--amber); color:#fff; cursor:pointer; font-family:'Inter',sans-serif; }
+.sb:hover { opacity:0.9; }
 
 /* MOBILE */
 @media(max-width:800px){
-  .sidebar{width:100%;height:auto;position:fixed;top:auto;bottom:0;left:0;right:0;flex-direction:row;border-top:1px solid rgba(255,255,255,0.1)}
-  .sidebar-brand,.sidebar-foot,.nav-section{display:none}
-  .sidebar-nav{display:flex;flex-direction:row;padding:0;width:100%}
-  .nav-btn{flex-direction:column;gap:3px;padding:8px 4px;font-size:9px;text-align:center;border-left:none;border-top:2px solid transparent;justify-content:center}
-  .nav-btn.active{border-top-color:var(--amber);border-left:none}
-  .nav-btn svg{width:20px;height:20px}
-  .main{margin-left:0;margin-bottom:58px}
-  .topbar{padding:12px 16px}
-  .content{padding:14px 16px}
-  .tw-grid{grid-template-columns:1fr 1fr}
-  .exp-grid{grid-template-columns:1fr 1fr}
-  .outfit-grid{grid-template-columns:1fr 1fr}
-  .form-grid{grid-template-columns:1fr}
-  table.svc thead{display:none}
-  table.svc,table.svc tbody,.svc-row,.svc-row td{display:block;width:100%}
-  .svc-row{border-radius:10px;border:1px solid var(--border);margin-bottom:8px;background:var(--card)}
-  .svc-row td{padding:5px 12px;border:none}
-  .svc-row td:first-child{padding-top:11px}
-  .svc-row td:last-child{padding-bottom:11px}
-  .exp-row,.exp-row td{display:block!important}
-  .tbl-wrap{border:none;border-radius:0}
-  .stats{gap:8px}
-  .tw-grid{grid-template-columns:1fr 1fr}
+  .sidebar { width:100%; height:auto; position:fixed; top:auto; bottom:0; left:0; right:0; flex-direction:row; border-top:1px solid rgba(255,255,255,0.1); }
+  .sb-brand, .sb-foot, .sb-sec { display:none; }
+  .sb-nav { display:flex; flex-direction:row; padding:0; width:100%; }
+  .nb { flex-direction:column; gap:3px; padding:8px 4px; font-size:9px; text-align:center; border-left:none; border-top:2px solid transparent; justify-content:center; }
+  .nb.on { border-top-color:var(--amber); border-left:none; }
+  .nb svg { width:20px; height:20px; }
+  .main { margin-left:0; margin-bottom:58px; }
+  .topbar { padding:12px 16px; }
+  .content { padding:14px 16px; }
+  .tw-grid { grid-template-columns:1fr 1fr; }
+  .eg { grid-template-columns:1fr 1fr; }
+  .og { grid-template-columns:1fr 1fr; }
+  .fg { grid-template-columns:1fr; }
+  table.svc thead { display:none; }
+  table.svc, table.svc tbody, .sr, .sr td { display:block; width:100%; }
+  .sr { border-radius:10px; border:1px solid var(--border); margin-bottom:8px; background:var(--card); }
+  .sr td { padding:5px 12px; border:none; }
+  .sr td:first-child { padding-top:11px; }
+  .sr td:last-child { padding-bottom:11px; }
+  .er, .er td { display:block!important; }
+  .tbl-wrap { border:none; border-radius:0; }
+  .stats { gap:8px; }
 }
 </style>
 </head>
 <body>
 
-<div class="loading-overlay" id="loading">
-  <div class="spinner"></div>
-  <div class="loading-text">Loading your planner...</div>
-</div>
+<div class="loader" id="loader"><div class="spin"></div><div class="lt">Loading your planner...</div></div>
 
-<div class="shell" style="display:none" id="app">
+<div class="shell" id="app" style="display:none">
 <aside class="sidebar">
-  <div class="sidebar-brand">
-    <span class="brand-cross">&#10013;</span>
-    <div class="brand-name">Peace Church <span>Online</span></div>
-    <div class="brand-sub">Worship Service Planner</div>
+  <div class="sb-brand">
+    <span class="sb-cross">&#10013;</span>
+    <div class="sb-name">Peace Church <span>Online</span></div>
+    <div class="sb-sub">Worship Service Planner</div>
   </div>
-  <nav class="sidebar-nav">
-    <div class="nav-section">Planning</div>
-    <button class="nav-btn active" id="nav-planner" onclick="showPage('planner',this)">
+  <nav class="sb-nav">
+    <div class="sb-sec">Planning</div>
+    <button class="nb on" id="nb-planner" onclick="go('planner',this)">
       <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Planner
     </button>
-    <button class="nav-btn" id="nav-add" onclick="showPage('add',this)">
+    <button class="nb" id="nb-add" onclick="go('add',this)">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>Add Service
     </button>
-    <div class="nav-section">Libraries</div>
-    <button class="nav-btn" id="nav-songs" onclick="showPage('songs',this)">
+    <div class="sb-sec">Libraries</div>
+    <button class="nb" id="nb-songs" onclick="go('songs',this)">
       <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>Songs
     </button>
-    <button class="nav-btn" id="nav-pads" onclick="showPage('pads',this)">
+    <button class="nb" id="nb-pads" onclick="go('pads',this)">
       <svg viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="9" ry="5"/><path d="M3 12v5c0 2.76 4.03 5 9 5s9-2.24 9-5v-5"/></svg>Pads
     </button>
-    <button class="nav-btn" id="nav-outfits" onclick="showPage('outfits',this)">
+    <button class="nb" id="nb-outfits" onclick="go('outfits',this)">
       <svg viewBox="0 0 24 24"><path d="M20.38 3.46L16 2a4 4 0 01-8 0L3.62 3.46a2 2 0 00-1.34 2.23l.58 3.57a1 1 0 00.99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 002-2V10h2.15a1 1 0 00.99-.84l.58-3.57a2 2 0 00-1.34-2.23z"/></svg>Outfits
     </button>
-    <button class="nav-btn" id="nav-prayers" onclick="showPage('prayers',this)">
+    <button class="nb" id="nb-prayers" onclick="go('prayers',this)">
       <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>Prayers
     </button>
   </nav>
-  <div class="sidebar-foot">Peace Church Online<br>Worship Planning Tool</div>
+  <div class="sb-foot">Peace Church Online<br>Worship Planning Tool</div>
 </aside>
 
 <div class="main">
   <div class="topbar">
-    <div class="topbar-left">
-      <div class="page-title">Worship Service Planner</div>
-      <div class="page-sub" id="page-sub">Planner</div>
-    </div>
-    <div class="topbar-right">Next service<br><strong id="topbar-next">&#8212;</strong></div>
+    <div><div class="pt">Worship Service Planner</div><div class="ps" id="ps">Planner</div></div>
+    <div class="tr">Next service<br><strong id="tn">-</strong></div>
   </div>
   <div class="content">
-    <div class="error-msg" id="error-msg"></div>
+    <div class="err" id="err"></div>
 
     <!-- PLANNER -->
-    <div class="page active" id="page-planner">
+    <div class="page on" id="pg-planner">
       <div class="stats">
-        <div class="stat"><div class="stat-n" id="s-conf">&#8212;</div><div class="stat-l">Services Held</div></div>
-        <div class="stat"><div class="stat-n" id="s-up">&#8212;</div><div class="stat-l">Upcoming</div></div>
-        <div class="stat"><div class="stat-n" id="s-songs">&#8212;</div><div class="stat-l">Songs</div></div>
-        <div class="stat"><div class="stat-n" id="s-total">&#8212;</div><div class="stat-l">Total Records</div></div>
+        <div class="stat"><div class="sn" id="st-c">-</div><div class="sl">Services Held</div></div>
+        <div class="stat"><div class="sn" id="st-u">-</div><div class="sl">Upcoming</div></div>
+        <div class="stat"><div class="sn" id="st-s">-</div><div class="sl">Songs</div></div>
+        <div class="stat"><div class="sn" id="st-t">-</div><div class="sl">Total Records</div></div>
       </div>
-      <div id="tw-banner"></div>
-      <div id="prayer-banner"></div>
+      <div id="tw-el"></div>
+      <div id="pb-el"></div>
       <div class="chips">
-        <button class="chip active" onclick="filterSvc('all',this)">All</button>
-        <button class="chip" onclick="filterSvc('upcoming',this)">Upcoming</button>
-        <button class="chip" onclick="filterSvc('confirmed',this)">Confirmed</button>
-        <button class="chip" onclick="filterSvc('draft',this)">Draft</button>
+        <button class="chip on" onclick="filt('all',this)">All</button>
+        <button class="chip" onclick="filt('upcoming',this)">Upcoming</button>
+        <button class="chip" onclick="filt('confirmed',this)">Confirmed</button>
+        <button class="chip" onclick="filt('draft',this)">Draft</button>
       </div>
       <div class="tbl-wrap">
         <table class="svc"><thead><tr>
           <th>Date</th><th>Message</th><th>Song 1</th><th>Song 2</th><th>Pad</th><th>Outfit</th><th>Status</th>
-        </tr></thead><tbody id="svc-body"></tbody></table>
+        </tr></thead><tbody id="tb"></tbody></table>
       </div>
     </div>
 
     <!-- ADD SERVICE -->
-    <div class="page" id="page-add">
-      <div class="panel">
-        <h3>New service</h3>
-        <div class="form-grid">
-          <div class="frow"><div class="flbl">Date</div><input class="finput" type="date" id="ns-date"/></div>
-          <div class="frow"><div class="flbl">Status</div>
-            <select class="finput" id="ns-status">
-              <option value="upcoming">Upcoming</option>
-              <option value="confirmed">Confirmed</option>
-              <option value="draft">Draft</option>
-            </select>
-          </div>
-          <div class="frow full"><div class="flbl">Message title</div><input class="finput" id="ns-title" placeholder="Optional — can add later"/></div>
-          <div class="frow"><div class="flbl">Song 1 (opener)</div><select class="finput" id="ns-s1"></select></div>
-          <div class="frow"><div class="flbl">Song 2 (closer)</div><select class="finput" id="ns-s2"></select></div>
-          <div class="frow"><div class="flbl">Pad</div><select class="finput" id="ns-pad"></select></div>
-          <div class="frow"><div class="flbl">Outfit</div><select class="finput" id="ns-outfit"></select></div>
-          <div class="frow"><div class="flbl">Prayer focus</div><select class="finput" id="ns-prayer"></select></div>
+    <div class="page" id="pg-add">
+      <div class="panel"><h3>New service</h3>
+        <div class="fg">
+          <div class="fr"><div class="fl">Date</div><input class="fi" type="date" id="ns-dt"/></div>
+          <div class="fr"><div class="fl">Status</div><select class="fi" id="ns-st"><option value="upcoming">Upcoming</option><option value="confirmed">Confirmed</option><option value="draft">Draft</option></select></div>
+          <div class="fr full"><div class="fl">Message title</div><input class="fi" id="ns-ti" placeholder="Optional"/></div>
+          <div class="fr"><div class="fl">Song 1 (opener)</div><select class="fi" id="ns-s1"></select></div>
+          <div class="fr"><div class="fl">Song 2 (closer)</div><select class="fi" id="ns-s2"></select></div>
+          <div class="fr"><div class="fl">Pad</div><select class="fi" id="ns-pd"></select></div>
+          <div class="fr"><div class="fl">Outfit</div><select class="fi" id="ns-ot"></select></div>
+          <div class="fr"><div class="fl">Prayer focus</div><select class="fi" id="ns-pr"></select></div>
         </div>
-        <button class="save-btn" id="save-svc-btn" onclick="saveService()">Save Service</button>
+        <button class="sb" onclick="saveSvc()">Save Service</button>
       </div>
     </div>
 
     <!-- SONGS -->
-    <div class="page" id="page-songs">
-      <div class="slabel">Suggestions for next week</div>
-      <div class="list-card" id="song-suggests"></div>
+    <div class="page" id="pg-songs">
+      <div class="slabel">Suggestions</div>
+      <div class="lc" id="song-sg"></div>
       <div class="slabel">Full library</div>
-      <div class="add-bar">
-        <input id="new-song" placeholder="Song title"/>
-        <input id="new-key" placeholder="Key" class="narrow"/>
-        <select id="new-role" style="max-width:100px;flex:none;font-size:12px;padding:7px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif">
-          <option value="opener">Opener</option>
-          <option value="closer">Closer</option>
+      <div class="ab">
+        <input id="ns-tit" placeholder="Song title"/>
+        <input id="ns-key" placeholder="Key" class="nw"/>
+        <select id="ns-rl" style="max-width:100px;flex:none;font-size:12px;padding:7px 10px;border:1px solid var(--border2);border-radius:8px;background:var(--bg);color:var(--ink);font-family:'Inter',sans-serif">
+          <option value="opener">Opener</option><option value="closer">Closer</option>
         </select>
-        <button class="add-btn" id="add-song-btn" onclick="addSong()">+ Add</button>
+        <button class="adb" onclick="addSong()">+ Add</button>
       </div>
-      <div class="list-card" id="song-list"></div>
+      <div class="lc" id="song-all"></div>
     </div>
 
     <!-- PADS -->
-    <div class="page" id="page-pads">
-      <div class="slabel">Pad suggestions</div>
-      <div class="info-note">Sorted by least recently used. Pick based on the feel of the week.</div>
-      <div class="list-card" id="pad-suggests"></div>
+    <div class="page" id="pg-pads">
+      <div class="slabel">Suggestions</div>
+      <div class="info">Sorted by least recently used. Pick based on the feel of the week.</div>
+      <div class="lc" id="pad-sg"></div>
       <div class="slabel">Full library</div>
-      <div class="add-bar">
-        <input id="new-pad" placeholder="Pad name"/>
-        <button class="add-btn" id="add-pad-btn" onclick="addPad()">+ Add</button>
-      </div>
-      <div class="list-card" id="pad-list"></div>
+      <div class="ab"><input id="ns-pn" placeholder="Pad name"/><button class="adb" onclick="addPad()">+ Add</button></div>
+      <div class="lc" id="pad-all"></div>
     </div>
 
     <!-- OUTFITS -->
-    <div class="page" id="page-outfits">
-      <div class="info-note">Sorted by least recently worn. Colour swatches show the main colours. "Over tee" = overshirt worn open. "Shacket" = oversized shirt worn like a jacket.</div>
+    <div class="page" id="pg-outfits">
+      <div class="info">Sorted by least recently worn. "Over tee" = overshirt worn open. "Shacket" = oversized shirt worn like a jacket.</div>
       <div class="slabel">Outfit rotation</div>
-      <div class="outfit-grid" id="outfit-grid"></div>
+      <div class="og" id="out-grid"></div>
       <div class="slabel">Add new outfit</div>
-      <div class="panel" style="max-width:500px">
-        <h3>New outfit</h3>
-        <div class="form-grid">
-          <div class="frow full"><div class="flbl">Description</div><input class="finput" id="no-name" placeholder="e.g. Denim Jacket Over Black Tee"/></div>
-          <div class="frow"><div class="flbl">Colour 1</div><input class="finput" type="color" id="no-c1" value="#1a1a1a"/></div>
-          <div class="frow"><div class="flbl">Colour 2 (optional)</div><input class="finput" type="color" id="no-c2" value="#ffffff"/></div>
-          <div class="frow"><div class="flbl">Colour 3 (optional)</div><input class="finput" type="color" id="no-c3" value="#ffffff"/></div>
-          <div class="frow"><div class="flbl">How many colours?</div>
-            <select class="finput" id="no-nc">
-              <option value="1">1</option><option value="2" selected>2</option><option value="3">3</option>
-            </select>
-          </div>
+      <div class="panel" style="max-width:500px"><h3>New outfit</h3>
+        <div class="fg">
+          <div class="fr full"><div class="fl">Description</div><input class="fi" id="ns-on" placeholder="e.g. Denim Jacket Over Black Tee"/></div>
+          <div class="fr"><div class="fl">Colour 1</div><input class="fi" type="color" id="ns-c1" value="#1a1a1a"/></div>
+          <div class="fr"><div class="fl">Colour 2 (optional)</div><input class="fi" type="color" id="ns-c2" value="#ffffff"/></div>
+          <div class="fr"><div class="fl">Colour 3 (optional)</div><input class="fi" type="color" id="ns-c3" value="#ffffff"/></div>
+          <div class="fr"><div class="fl">How many colours?</div><select class="fi" id="ns-nc"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></div>
         </div>
-        <button class="save-btn" id="add-outfit-btn" onclick="addOutfit()">Add Outfit</button>
+        <button class="sb" onclick="addOutfit()">Add Outfit</button>
       </div>
     </div>
 
     <!-- PRAYERS -->
-    <div class="page" id="page-prayers">
+    <div class="page" id="pg-prayers">
       <div class="slabel">Prayer rotation</div>
-      <div class="list-card" id="prayer-list"></div>
+      <div class="lc" id="pr-list"></div>
       <div class="slabel">Add prayer topic</div>
-      <div class="add-bar">
-        <input id="new-prayer" placeholder="Prayer topic"/>
-        <button class="add-btn" id="add-prayer-btn" onclick="addPrayer()">+ Add</button>
-      </div>
+      <div class="ab"><input id="ns-pt" placeholder="Prayer topic"/><button class="adb" onclick="addPrayer()">+ Add</button></div>
     </div>
 
   </div>
 </div>
 </div>
-
-<div class="toast" id="toast"></div>
+<div class="toast" id="tst"></div>
 
 <script>
-const SUPABASE_URL='https://zbrfermrflfctriyhqql.supabase.co';
-const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpicmZlcm1yZmxmY3RyaXlocXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODc1NzAsImV4cCI6MjA5MDk2MzU3MH0.3nVmZBsKLDcmsllOP6XQJYcHv7JIkJDiEANtw_jw9z0';
+var URL_ = 'https://zbrfermrflfctriyhqql.supabase.co';
+var KEY_ = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpicmZlcm1yZmxmY3RyaXlocXFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUzODc1NzAsImV4cCI6MjA5MDk2MzU3MH0.3nVmZBsKLDcmsllOP6XQJYcHv7JIkJDiEANtw_jw9z0';
 
-async function sb(table, method, body, query) {
-  method = method || 'GET';
-  query = query || '';
-  const url = SUPABASE_URL + '/rest/v1/' + table + (query ? '?' + query : '');
-  const opts = {
-    method: method,
-    headers: {
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      'Content-Type': 'application/json',
-      'Prefer': method === 'POST' ? 'return=representation' : ''
-    }
-  };
-  if (body) opts.body = JSON.stringify(body);
-  const r = await fetch(url, opts);
-  if (!r.ok) { const e = await r.text(); throw new Error(e); }
-  if (method === 'DELETE' || r.status === 204) return null;
+var songs=[], pads=[], outfits=[], svcs=[], prayers=[];
+var fFilter='all', openR={}, editR={};
+var skipped={song1:[],song2:[],pad:[],outfit:[]};
+
+var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+var PAD_COL=['#7c6aaa','#2d7a4f','#c06090','#c88010','#1a7a7a','#c05030','#2563a8','#7a4f2d','#6a8c2a','#8c5a2a'];
+
+async function db(table,method,body,qs){
+  method=method||'GET';
+  var url=URL_+'/rest/v1/'+table+(qs?'?'+qs:'');
+  var h={'apikey':KEY_,'Authorization':'Bearer '+KEY_,'Content-Type':'application/json'};
+  if(method==='POST') h['Prefer']='return=representation';
+  var r=await fetch(url,{method:method,headers:h,body:body?JSON.stringify(body):null});
+  if(!r.ok) throw new Error(await r.text());
+  if(method==='DELETE'||r.status===204) return null;
   return r.json();
 }
 
-var songs = [], pads = [], outfits = [], services = [], prayers = [];
-var svcFilter = 'all';
-var openRows = {};
-var editMode = {};
-var skipped = {song1: [], song2: [], pad: [], outfit: []};
+function fmt(d){
+  if(!d) return '-';
+  var p=d.split('T')[0].split('-');
+  return parseInt(p[2])+' '+MON[parseInt(p[1])-1]+' '+p[0];
+}
+function fmtS(d){
+  if(!d) return '-';
+  var p=d.split('T')[0].split('-');
+  return parseInt(p[2])+' '+MON[parseInt(p[1])-1];
+}
+function ago(d){
+  if(!d) return '';
+  var w=Math.floor((Date.now()-new Date(d))/604800000);
+  if(w<=0) return 'this week';
+  if(w===1) return '1 wk ago';
+  if(w<5) return w+' wks ago';
+  var mo=Math.floor(w/4.33);
+  if(mo<12) return (mo<=1?'1':''+mo)+' mo ago';
+  var yr=Math.floor(mo/12);
+  return (yr===1?'1':''+yr)+' yr ago';
+}
+function td(){return new Date().toISOString().split('T')[0];}
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');}
+function sw(colors,sz){
+  return(colors||[]).map(function(c){return '<span style="display:inline-block;width:'+sz+'px;height:'+sz+'px;background:'+c+';border-radius:'+Math.floor(sz/4)+'px;border:1px solid rgba(0,0,0,0.1);margin-right:2px"></span>';}).join('');
+}
+function isMon(){return new Date().getMonth()===11;}
+function ok(s){return !s.seasonal||isMon();}
+function gS(t){for(var i=0;i<songs.length;i++)if(songs[i].title===t)return songs[i];return null;}
+function gP(n){for(var i=0;i<pads.length;i++)if(pads[i].name===n)return pads[i];return null;}
+function gO(n){for(var i=0;i<outfits.length;i++)if(outfits[i].name===n)return outfits[i];return null;}
 
-var MO = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-
-function fmt(d) {
-  if (!d) return '\u2014';
-  var p = d.split('T')[0].split('-');
-  return parseInt(p[2]) + ' ' + MO[parseInt(p[1])-1] + ' ' + p[0];
+function toast(m){
+  var t=document.getElementById('tst');
+  t.textContent=m; t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
 }
-function fmtS(d) {
-  if (!d) return '\u2014';
-  var p = d.split('T')[0].split('-');
-  return parseInt(p[2]) + ' ' + MO[parseInt(p[1])-1];
-}
-function ago(d) {
-  if (!d) return '';
-  var w = Math.floor((Date.now() - new Date(d)) / (1000*60*60*24*7));
-  if (w <= 0) return 'this week';
-  if (w === 1) return '1 wk ago';
-  if (w < 5) return w + ' wks ago';
-  var mo = Math.floor(w / 4.33);
-  if (mo < 12) return mo <= 1 ? '1 mo ago' : mo + ' mo ago';
-  var yr = Math.floor(mo / 12);
-  return yr === 1 ? '1 yr ago' : yr + ' yrs ago';
-}
-function today() { return new Date().toISOString().split('T')[0]; }
-function esc(s) {
-  return (s || '').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;');
-}
-function toast(m) {
-  var t = document.getElementById('toast');
-  t.textContent = m; t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 2500);
-}
-function showError(m) {
-  var e = document.getElementById('error-msg');
-  e.textContent = m; e.style.display = 'block';
-  setTimeout(function() { e.style.display = 'none'; }, 5000);
-}
-function swHtml(colors, sz) {
-  return (colors || []).map(function(c) {
-    return '<div class="sw" style="width:' + sz + 'px;height:' + sz + 'px;background:' + c + ';border-radius:' + Math.floor(sz/4) + 'px"></div>';
-  }).join('');
-}
-function isDecember() { return new Date().getMonth() === 11; }
-function eligible(s) { return !s.seasonal || isDecember(); }
-function getSong(t) { return songs.find(function(s) { return s.title === t; }); }
-function getPad(n) { return pads.find(function(p) { return p.name === n; }); }
-function getOutfit(n) { return outfits.find(function(o) { return o.name === n; }); }
-
-function getNextPrayer() {
-  var sorted = prayers.slice().sort(function(a,b) { return a.sort_order - b.sort_order; });
-  var lastUsed = sorted.filter(function(p) { return p.last_used; })
-    .sort(function(a,b) { return new Date(b.last_used) - new Date(a.last_used); })[0];
-  if (!lastUsed) return sorted[0];
-  var idx = sorted.findIndex(function(p) { return p.id === lastUsed.id; });
-  return sorted[(idx + 1) % sorted.length];
+function showErr(m){
+  var e=document.getElementById('err');
+  e.textContent=m; e.style.display='block';
+  setTimeout(function(){e.style.display='none';},5000);
 }
 
-function suggest() {
-  function byDate(a, b) { return new Date(a.last_used || '2000-01-01') - new Date(b.last_used || '2000-01-01'); }
-  function byDateOutfit(a, b) {
-    if (!a.last_used && !b.last_used) return 0;
-    if (!a.last_used) return -1;
-    if (!b.last_used) return 1;
-    return new Date(a.last_used) - new Date(b.last_used);
-  }
-  var openers = songs.filter(function(s) { return s.role === 'opener' && eligible(s); }).sort(byDate);
-  var closers = songs.filter(function(s) { return s.role === 'closer' && eligible(s); }).sort(byDate);
-  return {
-    song1: openers[0] ? openers[0].title : '',
-    song2: closers[0] ? closers[0].title : '',
-    pad: pads.slice().sort(byDate)[0] ? pads.slice().sort(byDate)[0].name : '',
-    outfit: outfits.slice().sort(byDateOutfit)[0] ? outfits.slice().sort(byDateOutfit)[0].name : ''
+function nextPrayer(){
+  var s=prayers.slice().sort(function(a,b){return a.sort_order-b.sort_order;});
+  var u=s.filter(function(p){return p.last_used;}).sort(function(a,b){return new Date(b.last_used)-new Date(a.last_used);});
+  if(!u.length) return s[0];
+  var idx=0; for(var i=0;i<s.length;i++)if(s[i].id===u[0].id){idx=i;break;}
+  return s[(idx+1)%s.length];
+}
+function lastPrayer(){
+  var u=prayers.filter(function(p){return p.last_used;}).sort(function(a,b){return new Date(b.last_used)-new Date(a.last_used);});
+  return u[0]||null;
+}
+
+function byD(a,b){return new Date(a.last_used||'2000-01-01')-new Date(b.last_used||'2000-01-01');}
+function byDO(a,b){
+  if(!a.last_used&&!b.last_used) return 0;
+  if(!a.last_used) return -1;
+  if(!b.last_used) return 1;
+  return new Date(a.last_used)-new Date(b.last_used);
+}
+
+function suggest(){
+  var ops=songs.filter(function(s){return s.role==='opener'&&ok(s)&&skipped.song1.indexOf(s.title)===-1;}).sort(byD);
+  var cls=songs.filter(function(s){return s.role==='closer'&&ok(s)&&skipped.song2.indexOf(s.title)===-1;}).sort(byD);
+  var ps=pads.filter(function(p){return skipped.pad.indexOf(p.name)===-1;}).sort(byD);
+  var os=outfits.filter(function(o){return skipped.outfit.indexOf(o.name)===-1;}).sort(byDO);
+  return{
+    song1:ops[0]?ops[0].title:'',
+    song2:cls[0]?cls[0].title:'',
+    pad:ps[0]?ps[0].name:'',
+    outfit:os[0]?os[0].name:''
   };
 }
 
-function skipItem(type, value) {
-  if (skipped[type].indexOf(value) === -1) {
-    skipped[type].push(value);
-  }
-  renderTWBanner();
+function skipItem(type,val){
+  if(skipped[type].indexOf(val)===-1) skipped[type].push(val);
+  renderTW();
+}
+function resetSkips(){
+  skipped={song1:[],song2:[],pad:[],outfit:[]};
+  renderTW();
 }
 
-function resetSkips() {
-  skipped = {song1: [], song2: [], pad: [], outfit: []};
-  renderTWBanner();
+function padCol(n){
+  for(var i=0;i<pads.length;i++)if(pads[i].name===n)return PAD_COL[i%PAD_COL.length];
+  return PAD_COL[0];
 }
 
-function songOpts(sel, role) {
-  var list = role ? songs.filter(function(s) { return s.role === role; }) : songs;
-  var sorted = list.slice().sort(function(a,b) { return a.title.localeCompare(b.title); });
-  return '<option value="">\u2014 none \u2014</option>' + sorted.map(function(s) {
-    return '<option value="' + esc(s.title) + '"' + (sel === s.title ? ' selected' : '') + '>' + esc(s.title) + '</option>';
-  }).join('');
+function sopts(sel,role){
+  var list=role?songs.filter(function(s){return s.role===role;}):songs;
+  list=list.slice().sort(function(a,b){return a.title.localeCompare(b.title);});
+  var h='<option value="">- none -</option>';
+  for(var i=0;i<list.length;i++) h+='<option value="'+esc(list[i].title)+'"'+(sel===list[i].title?' selected':'')+'>'+esc(list[i].title)+'</option>';
+  return h;
 }
-function padOpts(sel) {
-  var sorted = pads.slice().sort(function(a,b) { return new Date(a.last_used||'2000-01-01') - new Date(b.last_used||'2000-01-01'); });
-  return '<option value="">\u2014 none \u2014</option>' + sorted.map(function(p) {
-    return '<option value="' + esc(p.name) + '"' + (sel === p.name ? ' selected' : '') + '>' + esc(p.name) + '</option>';
-  }).join('');
+function pOpts(sel){
+  var l=pads.slice().sort(byD);
+  var h='<option value="">- none -</option>';
+  for(var i=0;i<l.length;i++) h+='<option value="'+esc(l[i].name)+'"'+(sel===l[i].name?' selected':'')+'>'+esc(l[i].name)+'</option>';
+  return h;
 }
-function outfitOpts(sel) {
-  return '<option value="">\u2014 none \u2014</option>' + outfits.map(function(o) {
-    return '<option value="' + esc(o.name) + '"' + (sel === o.name ? ' selected' : '') + '>' + esc(o.name) + '</option>';
-  }).join('');
+function oOpts(sel){
+  var h='<option value="">- none -</option>';
+  for(var i=0;i<outfits.length;i++) h+='<option value="'+esc(outfits[i].name)+'"'+(sel===outfits[i].name?' selected':'')+'>'+esc(outfits[i].name)+'</option>';
+  return h;
 }
-function prayerOpts(sel) {
-  var sorted = prayers.slice().sort(function(a,b) { return a.sort_order - b.sort_order; });
-  return '<option value="">\u2014 none \u2014</option>' + sorted.map(function(p) {
-    return '<option value="' + esc(p.topic) + '"' + (sel === p.topic ? ' selected' : '') + '>' + esc(p.topic) + '</option>';
-  }).join('');
-}
-
-var PAD_COLORS = ["#7c6aaa","#2d7a4f","#c06090","#c88010","#1a7a7a","#c05030","#2563a8","#7a4f2d","#6a8c2a","#8c5a2a"];
-function padColor(n) {
-  var i = pads.findIndex(function(p) { return p.name === n; });
-  return PAD_COLORS[(i >= 0 ? i : 0) % PAD_COLORS.length];
+function prOpts(sel){
+  var l=prayers.slice().sort(function(a,b){return a.sort_order-b.sort_order;});
+  var h='<option value="">- none -</option>';
+  for(var i=0;i<l.length;i++) h+='<option value="'+esc(l[i].topic)+'"'+(sel===l[i].topic?' selected':'')+'>'+esc(l[i].topic)+'</option>';
+  return h;
 }
 
-function renderTopbar() {
-  var now = today();
-  var upcoming = services.filter(function(s) { return s.status === 'upcoming' && s.date >= now; })
-    .sort(function(a,b) { return a.date.localeCompare(b.date); });
-  document.getElementById('topbar-next').textContent = upcoming[0] ? fmt(upcoming[0].date) : '\u2014';
+function renderTopbar(){
+  var now=td();
+  var up=svcs.filter(function(s){return s.status==='upcoming'&&s.date>=now;}).sort(function(a,b){return a.date.localeCompare(b.date);});
+  document.getElementById('tn').textContent=up[0]?fmt(up[0].date):'-';
 }
 
-function renderStats() {
-  document.getElementById('s-total').textContent = services.length;
-  document.getElementById('s-conf').textContent = services.filter(function(s) { return s.status === 'confirmed'; }).length;
-  document.getElementById('s-up').textContent = services.filter(function(s) { return s.status === 'upcoming'; }).length;
-  document.getElementById('s-songs').textContent = songs.length;
+function renderStats(){
+  document.getElementById('st-t').textContent=svcs.length;
+  document.getElementById('st-c').textContent=svcs.filter(function(s){return s.status==='confirmed';}).length;
+  document.getElementById('st-u').textContent=svcs.filter(function(s){return s.status==='upcoming';}).length;
+  document.getElementById('st-s').textContent=songs.length;
 }
 
-function renderTWBanner() {
-  var el = document.getElementById('tw-banner');
-  var now = today();
-  var upcoming = services.filter(function(s) { return s.status === 'upcoming' && s.date >= now; })
-    .sort(function(a,b) { return a.date.localeCompare(b.date); });
-  var svc = upcoming[0];
-  if (!svc) { el.innerHTML = ''; return; }
-  var sg = suggest();
-  var song1 = svc.song1 || sg.song1;
-  var song2 = svc.song2 || sg.song2;
-  var pad = svc.pad || sg.pad;
-  var outfit = svc.outfit || sg.outfit;
-  var s1 = getSong(song1), s2 = getSong(song2), ot = getOutfit(outfit);
-  var nextP = getNextPrayer();
+function renderTW(){
+  var el=document.getElementById('tw-el');
+  var now=td();
+  var up=svcs.filter(function(s){return s.status==='upcoming'&&s.date>=now;}).sort(function(a,b){return a.date.localeCompare(b.date);});
+  var svc=up[0];
+  if(!svc){el.innerHTML='';return;}
+  var sg=suggest();
+  var s1=svc.song1||sg.song1, s2=svc.song2||sg.song2, pad=svc.pad||sg.pad, outfit=svc.outfit||sg.outfit;
+  var gs1=gS(s1), gs2=gS(s2), got=gO(outfit);
+  var np=nextPrayer();
 
-  function skipBtn(type, val) {
-    if (!val) return '';
-    return '<button class="skip-btn" data-type="' + type + '" data-val="' + esc(val) + '" style="font-size:10px;padding:2px 8px;border-radius:6px;border:1px solid var(--border2);background:none;color:var(--ink3);cursor:pointer;margin-left:6px">Skip</button>';
-  }
+  var h='<div class="tw">';
+  h+='<div class="tw-hdr"><div class="tw-date">This week - '+fmt(svc.date)+'</div><span class="tw-badge">Suggested</span></div>';
+  if(svc.title) h+='<div class="tw-msg">"'+esc(svc.title)+'"</div>';
+  h+='<div class="tw-grid">';
 
-  var h = '<div class="this-week">';
-  h += '<div class="tw-hdr"><div class="tw-date">This week \u2014 ' + fmt(svc.date) + '</div>';
-  h += '<span class="tw-badge">Suggested</span></div>';
-  if (svc.title) h += '<div class="tw-msg">\u201c' + esc(svc.title) + '\u201d</div>';
-  h += '<div class="tw-grid">';
+  h+='<div><div class="tw-lbl">Song 1 <button class="skip" data-t="song1" data-v="'+esc(s1)+'">Skip</button></div>';
+  h+='<div class="tw-val">'+esc(s1||'-')+'</div>';
+  if(gs1) h+='<div class="tw-meta">prev. '+fmtS(gs1.last_used)+' &middot; '+ago(gs1.last_used)+'</div>';
+  h+='</div>';
 
-  h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Song 1' + skipBtn('song1', song1) + '</div>';
-  h += '<div class="tw-val">' + (song1 || '\u2014') + '</div>';
-  if (s1) h += '<div class="tw-meta">prev. ' + fmtS(s1.last_used) + ' \u00b7 ' + ago(s1.last_used) + '</div>';
-  h += '</div>';
+  h+='<div><div class="tw-lbl">Song 2 <button class="skip" data-t="song2" data-v="'+esc(s2)+'">Skip</button></div>';
+  h+='<div class="tw-val">'+esc(s2||'-')+'</div>';
+  if(gs2) h+='<div class="tw-meta">prev. '+fmtS(gs2.last_used)+' &middot; '+ago(gs2.last_used)+'</div>';
+  h+='</div>';
 
-  h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Song 2' + skipBtn('song2', song2) + '</div>';
-  h += '<div class="tw-val">' + (song2 || '\u2014') + '</div>';
-  if (s2) h += '<div class="tw-meta">prev. ' + fmtS(s2.last_used) + ' \u00b7 ' + ago(s2.last_used) + '</div>';
-  h += '</div>';
+  h+='<div><div class="tw-lbl">Pad <button class="skip" data-t="pad" data-v="'+esc(pad)+'">Skip</button></div>';
+  h+='<div class="tw-val">'+esc(pad||'-')+'</div></div>';
 
-  h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Pad' + skipBtn('pad', pad) + '</div>';
-  h += '<div class="tw-val">' + (pad || '\u2014') + '</div></div>';
+  h+='<div><div class="tw-lbl">Outfit <button class="skip" data-t="outfit" data-v="'+esc(outfit)+'">Skip</button></div>';
+  h+='<div class="tw-val">'+esc(outfit||'-')+'</div>';
+  if(got) h+='<div style="margin-top:4px">'+sw(got.colors,14)+'</div>';
+  h+='</div>';
 
-  h += '<div><div class="tw-lbl" style="display:flex;align-items:center">Outfit' + skipBtn('outfit', outfit) + '</div>';
-  h += '<div class="tw-val">' + (outfit || '\u2014') + '</div>';
-  if (ot) h += '<div class="swatches">' + swHtml(ot.colors, 14) + '</div>';
-  h += '</div>';
-
-  h += '<div><div class="tw-lbl">Prayer</div>';
-  h += '<div class="tw-val">' + (nextP ? esc(nextP.topic) : '\u2014') + '</div></div>';
-
-  h += '</div>';
-  h += '<div class="tw-hint">Expand the row below to confirm or override. ';
-  h += '<button onclick="resetSkips()" style="font-size:11px;font-weight:600;color:var(--amber);background:none;border:none;cursor:pointer;text-decoration:underline">Reset skips</button></div>';
-  h += '</div>';
-  el.innerHTML = h;
+  h+='<div><div class="tw-lbl">Prayer</div><div class="tw-val">'+esc(np?np.topic:'-')+'</div></div>';
+  h+='</div>';
+  h+='<div class="tw-hint">Expand the row below to confirm or override. <button class="rl" onclick="resetSkips()">Reset skips</button></div>';
+  h+='</div>';
+  el.innerHTML=h;
 }
 
-function renderPrayerBanner() {
-  var el = document.getElementById('prayer-banner');
-  var nextP = getNextPrayer();
-  var sorted = prayers.slice().sort(function(a,b) { return a.sort_order - b.sort_order; });
-  var lastUsed = sorted.filter(function(p) { return p.last_used; })
-    .sort(function(a,b) { return new Date(b.last_used) - new Date(a.last_used); })[0];
-  if (!nextP) { el.innerHTML = ''; return; }
-  el.innerHTML = '<div class="prayer-banner"><div class="prayer-left"><div class="prayer-label">\u25b6 Prayer Focus</div><div class="prayer-topic">' + esc(nextP.topic) + '</div><div class="prayer-last">Last week: ' + (lastUsed ? esc(lastUsed.topic) : 'none') + '</div></div><button class="prayer-done-btn" onclick="markPrayerDone()">Mark as done</button></div>';
+function renderPB(){
+  var el=document.getElementById('pb-el');
+  var np=nextPrayer(); var lp=lastPrayer();
+  if(!np){el.innerHTML='';return;}
+  el.innerHTML='<div class="pb"><div><div class="pb-lbl">Prayer Focus</div><div class="pb-topic">'+esc(np.topic)+'</div><div class="pb-last">Last week: '+esc(lp?lp.topic:'none')+'</div></div><button class="pb-btn" onclick="markPrayer()">Mark as done</button></div>';
 }
 
-function filterSvc(f, btn) {
-  svcFilter = f;
-  document.querySelectorAll('.chips .chip').forEach(function(c) { c.classList.remove('active'); });
-  btn.classList.add('active');
+function filt(f,btn){
+  fFilter=f;
+  document.querySelectorAll('.chips .chip').forEach(function(c){c.classList.remove('on');});
+  btn.classList.add('on');
   renderTable();
 }
 
-function renderTable() {
-  var now = today();
-  var data = services.slice().sort(function(a,b) { return b.date.localeCompare(a.date); });
-  if (svcFilter !== 'all') data = data.filter(function(s) { return s.status === svcFilter; });
-  var nx = services.filter(function(s) { return s.status === 'upcoming' && s.date >= now; })
-    .sort(function(a,b) { return a.date.localeCompare(b.date); })[0];
+function renderTable(){
+  var now=td();
+  var data=svcs.slice().sort(function(a,b){return b.date.localeCompare(a.date);});
+  if(fFilter!=='all') data=data.filter(function(s){return s.status===fFilter;});
+  var up=svcs.filter(function(s){return s.status==='upcoming'&&s.date>=now;}).sort(function(a,b){return a.date.localeCompare(b.date);});
+  var nx=up[0];
 
-  var html = data.map(function(svc) {
-    var isN = nx && svc.id === nx.id;
-    var s1 = getSong(svc.song1), s2 = getSong(svc.song2), ot = getOutfit(svc.outfit);
-    var pc = svc.status === 'confirmed' ? 'pill-confirmed' : svc.status === 'upcoming' ? 'pill-upcoming' : 'pill-draft';
-    var io = openRows[svc.id];
-    var outfitShort = svc.outfit && svc.outfit.length > 24 ? svc.outfit.slice(0,24) + '\u2026' : svc.outfit;
+  var h='';
+  for(var i=0;i<data.length;i++){
+    var svc=data[i];
+    var isN=nx&&svc.id===nx.id;
+    var s1=gS(svc.song1), s2=gS(svc.song2), ot=gO(svc.outfit);
+    var pc=svc.status==='confirmed'?'p-c':svc.status==='upcoming'?'p-u':'p-d';
+    var io=openR[svc.id], em=editR[svc.id];
+    var canEdit=svc.status==='upcoming'||em;
+    var short=svc.outfit&&svc.outfit.length>22?svc.outfit.slice(0,22)+'...':svc.outfit;
 
-    var main = '<tr class="svc-row' + (io ? ' open' : '') + '" onclick="toggleRow(\'' + svc.id + '\')">';
-    main += '<td class="td-date">' + fmt(svc.date) + (isN ? '<span class="next-tag">Next</span>' : '') + '</td>';
-    main += '<td class="td-title' + (svc.title ? '' : ' empty') + '">' + (svc.title || 'Title not set') + '</td>';
-    main += '<td class="td-song">' + (svc.song1 || '\u2014') + '</td>';
-    main += '<td class="td-song">' + (svc.song2 || '\u2014') + '</td>';
-    main += '<td class="td-pad">' + (svc.pad || '\u2014') + '</td>';
-    main += '<td><div class="td-outfit">' + (ot ? swHtml(ot.colors, 12) : '') + (svc.outfit ? '<span style="font-size:11px;color:var(--ink2)">' + esc(outfitShort) + '</span>' : '<span style="font-size:11px;color:var(--ink3)">\u2014</span>') + '</div></td>';
-    main += '<td><span class="pill ' + pc + '">' + svc.status + '</span></td>';
-    main += '</tr>';
+    h+='<tr class="sr'+(io?' open':'')+'" onclick="toggleR(\''+svc.id+'\')">';
+    h+='<td class="td-d">'+fmt(svc.date)+(isN?'<span class="nt">Next</span>':'')+'</td>';
+    h+='<td class="td-t'+(svc.title?'':' em')+'">'+esc(svc.title||'Title not set')+'</td>';
+    h+='<td class="td-s">'+esc(svc.song1||'-')+'</td>';
+    h+='<td class="td-s">'+esc(svc.song2||'-')+'</td>';
+    h+='<td class="td-p">'+esc(svc.pad||'-')+'</td>';
+    h+='<td><div class="td-o">'+(ot?sw(ot.colors,12):'')+esc(short||'-')+'</div></td>';
+    h+='<td><span class="pill '+pc+'">'+svc.status+'</span></td>';
+    h+='</tr>';
 
-    var exp = '<tr class="exp-row' + (io ? ' open' : '') + '" id="er-' + svc.id + '"><td colspan="7"><div class="exp-inner">';
-    exp += '<div class="exp-grid">';
+    h+='<tr class="er'+(io?' open':'')+'" id="er-'+svc.id+'"><td colspan="7"><div class="ei">';
+    h+='<div class="eg">';
 
     // Song 1
-    exp += '<div><div class="exp-lbl">Song 1</div>';
-    if (svc.status === 'upcoming' || editMode[svc.id]) {
-      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="song1" onchange="updateSvcFromEl(this)">' + songOpts(svc.song1, 'opener') + '</select>';
-    } else {
-      exp += '<div class="exp-val' + (svc.song1 ? '' : ' empty') + '">' + (svc.song1 || 'not set') + '</div>';
-      if (s1) exp += '<div class="exp-meta">Last used: <strong>' + fmt(s1.last_used) + '</strong> \u00b7 ' + ago(s1.last_used) + '</div>';
-    }
-    exp += '</div>';
+    h+='<div><div class="el">Song 1</div>';
+    if(canEdit) h+='<select class="esel" onchange="upd(\''+svc.id+'\',\'song1\',this.value)">'+sopts(svc.song1,'opener')+'</select>';
+    else{ h+='<div class="ev'+(svc.song1?'':' em')+'">'+esc(svc.song1||'not set')+'</div>'; if(s1) h+='<div class="em2">Last: <strong>'+fmt(s1.last_used)+'</strong> &middot; '+ago(s1.last_used)+'</div>'; }
+    h+='</div>';
 
     // Song 2
-    exp += '<div><div class="exp-lbl">Song 2</div>';
-    if (svc.status === 'upcoming' || editMode[svc.id]) {
-      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="song2" onchange="updateSvcFromEl(this)">' + songOpts(svc.song2, 'closer') + '</select>';
-    } else {
-      exp += '<div class="exp-val' + (svc.song2 ? '' : ' empty') + '">' + (svc.song2 || 'not set') + '</div>';
-      if (s2) exp += '<div class="exp-meta">Last used: <strong>' + fmt(s2.last_used) + '</strong> \u00b7 ' + ago(s2.last_used) + '</div>';
-    }
-    exp += '</div>';
+    h+='<div><div class="el">Song 2</div>';
+    if(canEdit) h+='<select class="esel" onchange="upd(\''+svc.id+'\',\'song2\',this.value)">'+sopts(svc.song2,'closer')+'</select>';
+    else{ h+='<div class="ev'+(svc.song2?'':' em')+'">'+esc(svc.song2||'not set')+'</div>'; if(s2) h+='<div class="em2">Last: <strong>'+fmt(s2.last_used)+'</strong> &middot; '+ago(s2.last_used)+'</div>'; }
+    h+='</div>';
 
     // Pad
-    exp += '<div><div class="exp-lbl">Pad</div>';
-    if (svc.status === 'upcoming' || editMode[svc.id]) {
-      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="pad" onchange="updateSvcFromEl(this)">' + padOpts(svc.pad) + '</select>';
-    } else {
-      exp += '<div class="exp-val' + (svc.pad ? '' : ' empty') + '">' + (svc.pad || '\u2014') + '</div>';
-    }
-    exp += '</div>';
+    h+='<div><div class="el">Pad</div>';
+    if(canEdit) h+='<select class="esel" onchange="upd(\''+svc.id+'\',\'pad\',this.value)">'+pOpts(svc.pad)+'</select>';
+    else h+='<div class="ev'+(svc.pad?'':' em')+'">'+esc(svc.pad||'-')+'</div>';
+    h+='</div>';
 
     // Outfit
-    exp += '<div><div class="exp-lbl">Outfit</div>';
-    if (svc.status === 'upcoming' || editMode[svc.id]) {
-      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="outfit" onchange="updateSvcFromEl(this)">' + outfitOpts(svc.outfit) + '</select>';
-    } else {
-      exp += '<div class="exp-val' + (svc.outfit ? '' : ' empty') + '">' + (svc.outfit || '\u2014') + '</div>';
-      if (ot) exp += '<div class="swatches" style="margin-top:5px">' + swHtml(ot.colors, 14) + '</div>';
-    }
-    exp += '</div>';
+    h+='<div><div class="el">Outfit</div>';
+    if(canEdit) h+='<select class="esel" onchange="upd(\''+svc.id+'\',\'outfit\',this.value)">'+oOpts(svc.outfit)+'</select>';
+    else{ h+='<div class="ev'+(svc.outfit?'':' em')+'">'+esc(svc.outfit||'-')+'</div>'; if(ot) h+='<div style="margin-top:4px">'+sw(ot.colors,14)+'</div>'; }
+    h+='</div>';
 
     // Prayer
-    exp += '<div><div class="exp-lbl">Prayer focus</div>';
-    if (svc.status === 'upcoming' || editMode[svc.id]) {
-      exp += '<select class="exp-sel" data-id="' + svc.id + '" data-field="prayer" onchange="updateSvcFromEl(this)">' + prayerOpts(svc.prayer) + '</select>';
-    } else {
-      exp += '<div class="exp-val' + (svc.prayer ? '' : ' empty') + '">' + (svc.prayer || 'not recorded') + '</div>';
-    }
-    exp += '</div>';
+    h+='<div><div class="el">Prayer focus</div>';
+    if(canEdit) h+='<select class="esel" onchange="upd(\''+svc.id+'\',\'prayer\',this.value)">'+prOpts(svc.prayer)+'</select>';
+    else h+='<div class="ev'+(svc.prayer?'':' em')+'">'+esc(svc.prayer||'not recorded')+'</div>';
+    h+='</div>';
 
-    // Title (upcoming and edit mode)
-    if (svc.status === 'upcoming' || editMode[svc.id]) {
-      exp += '<div style="grid-column:1/-1"><div class="exp-lbl">Message title</div>';
-      exp += '<input class="exp-inp" placeholder="Add title\u2026" value="' + esc(svc.title || '') + '" data-id="' + svc.id + '" data-field="title" onchange="updateSvcFromEl(this)"/>';
-      exp += '</div>';
+    // Title
+    if(canEdit){
+      h+='<div style="grid-column:1/-1"><div class="el">Message title</div>';
+      h+='<input class="einp" placeholder="Add title..." value="'+esc(svc.title||'')+'" onchange="upd(\''+svc.id+'\',\'title\',this.value)"/>';
+      h+='</div>';
     }
+    h+='</div>';
 
-    exp += '</div>'; // end exp-grid
-    exp += '<div class="exp-actions">';
-    if (svc.status === 'upcoming') {
-      exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="confirmSvc(this.dataset.id, event)">\u2713 Confirm this week</button>';
-    } else if (svc.status === 'confirmed') {
-      if (editMode[svc.id]) {
-        exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="saveEdit(this.dataset.id, event)">Save changes</button>';
-        exp += '<button class="exp-btn" data-id="' + svc.id + '" onclick="cancelEdit(this.dataset.id, event)">Cancel</button>';
+    // Actions
+    h+='<div class="ea">';
+    if(svc.status==='upcoming'){
+      h+='<button class="eb pr" onclick="confSvc(\''+svc.id+'\',event)">Confirm this week</button>';
+    } else if(svc.status==='confirmed'){
+      if(em){
+        h+='<button class="eb pr" onclick="saveEdit(\''+svc.id+'\',event)">Save changes</button>';
+        h+='<button class="eb" onclick="cancelEdit(\''+svc.id+'\',event)">Cancel</button>';
       } else {
-        exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="editSvc(this.dataset.id, event)">Edit</button>';
-        exp += '<button class="exp-btn" data-id="' + svc.id + '" onclick="unconfirmSvc(this.dataset.id, event)">Move to upcoming</button>';
+        h+='<button class="eb pr" onclick="startEdit(\''+svc.id+'\',event)">Edit</button>';
+        h+='<button class="eb" onclick="unconf(\''+svc.id+'\',event)">Move to upcoming</button>';
       }
     } else {
-      exp += '<button class="exp-btn primary" data-id="' + svc.id + '" onclick="confirmSvc(this.dataset.id, event)">\u2713 Confirm</button>';
+      h+='<button class="eb pr" onclick="confSvc(\''+svc.id+'\',event)">Confirm</button>';
     }
-    exp += '<button class="exp-btn danger" data-id="' + svc.id + '" onclick="deleteSvc(this.dataset.id, event)">Delete</button>';
-    exp += '</div>';
-    exp += '</div></td></tr>';
-
-    return main + exp;
-  }).join('');
-
-  document.getElementById('svc-body').innerHTML = html;
+    h+='<button class="eb dn" onclick="delSvc(\''+svc.id+'\',event)">Delete</button>';
+    h+='</div>';
+    h+='</div></td></tr>';
+  }
+  document.getElementById('tb').innerHTML=h;
 }
 
-function toggleRow(id) {
-  openRows[id] = !openRows[id];
-  renderTable();
+function toggleR(id){ openR[id]=!openR[id]; if(!openR[id]) editR[id]=false; renderTable(); }
+function startEdit(id,e){ e.stopPropagation(); editR[id]=true; openR[id]=true; renderTable(); }
+function cancelEdit(id,e){ e.stopPropagation(); editR[id]=false; renderTable(); }
+
+function upd(id,field,val){
+  for(var i=0;i<svcs.length;i++) if(svcs[i].id===id){ svcs[i][field]=val; break; }
+  var body={}; body[field]=val;
+  db('services','PATCH',body,'id=eq.'+id).catch(function(e){showErr(e.message);});
 }
 
-function editSvc(id, e) {
+async function confSvc(id,e){
   e.stopPropagation();
-  editMode[id] = true;
-  openRows[id] = true;
-  renderTable();
+  var svc=null; for(var i=0;i<svcs.length;i++) if(svcs[i].id===id){svc=svcs[i];break;}
+  if(!svc) return;
+  svc.status='confirmed';
+  if(!svc.prayer){var np=nextPrayer(); if(np) svc.prayer=np.topic;}
+  var patch={status:'confirmed',title:svc.title,song1:svc.song1,song2:svc.song2,pad:svc.pad,outfit:svc.outfit,prayer:svc.prayer};
+  var ps=[db('services','PATCH',patch,'id=eq.'+id)];
+  var s1=gS(svc.song1); if(s1){s1.last_used=svc.date;ps.push(db('songs','PATCH',{last_used:svc.date},'id=eq.'+s1.id));}
+  var s2=gS(svc.song2); if(s2){s2.last_used=svc.date;ps.push(db('songs','PATCH',{last_used:svc.date},'id=eq.'+s2.id));}
+  var p=gP(svc.pad); if(p){p.last_used=svc.date;ps.push(db('pads','PATCH',{last_used:svc.date},'id=eq.'+p.id));}
+  var o=gO(svc.outfit); if(o){o.last_used=svc.date;ps.push(db('outfits','PATCH',{last_used:svc.date},'id=eq.'+o.id));}
+  try{await Promise.all(ps);}catch(err){showErr(err.message);return;}
+  openR[id]=false; editR[id]=false;
+  renderAll(); toast('Confirmed - suggestions updated');
 }
 
-async function saveEdit(id, e) {
+async function saveEdit(id,e){
   e.stopPropagation();
-  editMode[id] = false;
-  var svc = services.find(function(s) { return s.id === id; });
-  if (!svc) return;
-  try {
-    await sb('services', 'PATCH', {title:svc.title, song1:svc.song1, song2:svc.song2, pad:svc.pad, outfit:svc.outfit, prayer:svc.prayer}, 'id=eq.' + id);
-    renderAll();
-    toast('Saved');
-  } catch(err) { showError(err.message); }
+  var svc=null; for(var i=0;i<svcs.length;i++) if(svcs[i].id===id){svc=svcs[i];break;}
+  if(!svc) return;
+  var patch={title:svc.title,song1:svc.song1,song2:svc.song2,pad:svc.pad,outfit:svc.outfit,prayer:svc.prayer};
+  try{await db('services','PATCH',patch,'id=eq.'+id);}catch(err){showErr(err.message);return;}
+  editR[id]=false; renderAll(); toast('Saved');
 }
 
-function cancelEdit(id, e) {
+async function unconf(id,e){
   e.stopPropagation();
-  editMode[id] = false;
-  renderTable();
+  for(var i=0;i<svcs.length;i++) if(svcs[i].id===id){svcs[i].status='upcoming';break;}
+  try{await db('services','PATCH',{status:'upcoming'},'id=eq.'+id);}catch(err){showErr(err.message);}
+  renderAll(); toast('Moved to upcoming');
 }
 
-function updateSvcFromEl(el) {
-  var id = el.dataset.id;
-  var field = el.dataset.field;
-  var val = el.value;
-  updateSvc(id, field, val);
-}
-
-async function updateSvc(id, field, val) {
-  var svc = services.find(function(s) { return s.id === id; });
-  if (svc) svc[field] = val;
-  try {
-    var patch = {};
-    patch[field] = val;
-    await sb('services', 'PATCH', patch, 'id=eq.' + id);
-  } catch(e) { showError('Save failed: ' + e.message); }
-}
-
-async function confirmSvc(id, e) {
+async function delSvc(id,e){
   e.stopPropagation();
-  var svc = services.find(function(s) { return s.id === id; });
-  if (!svc) return;
-  svc.status = 'confirmed';
-  if (!svc.prayer) { var np = getNextPrayer(); if (np) svc.prayer = np.topic; }
-  var updates = [sb('services', 'PATCH', {status:'confirmed', title:svc.title, song1:svc.song1, song2:svc.song2, pad:svc.pad, outfit:svc.outfit, prayer:svc.prayer}, 'id=eq.' + id)];
-  if (svc.song1) { var s = getSong(svc.song1); if (s) { s.last_used = svc.date; updates.push(sb('songs', 'PATCH', {last_used:svc.date}, 'id=eq.' + s.id)); } }
-  if (svc.song2) { var s2 = getSong(svc.song2); if (s2) { s2.last_used = svc.date; updates.push(sb('songs', 'PATCH', {last_used:svc.date}, 'id=eq.' + s2.id)); } }
-  if (svc.pad) { var p = getPad(svc.pad); if (p) { p.last_used = svc.date; updates.push(sb('pads', 'PATCH', {last_used:svc.date}, 'id=eq.' + p.id)); } }
-  if (svc.outfit) { var o = getOutfit(svc.outfit); if (o) { o.last_used = svc.date; updates.push(sb('outfits', 'PATCH', {last_used:svc.date}, 'id=eq.' + o.id)); } }
-  try { await Promise.all(updates); } catch(err) { showError('Failed: ' + err.message); return; }
-  openRows[id] = false;
-  renderAll();
-  toast('Confirmed \u2014 suggestions updated');
+  if(!confirm('Delete this service?')) return;
+  svcs=svcs.filter(function(s){return s.id!==id;}); openR[id]=false; editR[id]=false;
+  try{await db('services','DELETE',null,'id=eq.'+id);}catch(err){showErr(err.message);}
+  renderAll(); toast('Deleted');
 }
 
-async function unconfirmSvc(id, e) {
-  e.stopPropagation();
-  var svc = services.find(function(s) { return s.id === id; });
-  if (svc) svc.status = 'upcoming';
-  try { await sb('services', 'PATCH', {status:'upcoming'}, 'id=eq.' + id); } catch(err) { showError(err.message); }
-  renderAll();
-  toast('Moved to upcoming');
+function renderSongs(){
+  var ops=songs.filter(function(s){return s.role==='opener'&&ok(s)&&skipped.song1.indexOf(s.title)===-1;}).sort(byD);
+  var cls=songs.filter(function(s){return s.role==='closer'&&ok(s)&&skipped.song2.indexOf(s.title)===-1;}).sort(byD);
+  var h='<div class="lsh">Song 1 - Openers</div>';
+  for(var i=0;i<Math.min(3,ops.length);i++) h+='<div class="lr"><div class="rr">'+(i+1)+'</div><div class="ri"><div class="rn">'+esc(ops[i].title)+'</div><div class="rl2">Last used: <strong>'+fmt(ops[i].last_used)+'</strong> &middot; '+ago(ops[i].last_used)+'</div></div><div class="rb">'+esc(ops[i].key||'?')+'</div></div>';
+  h+='<div class="lsh">Song 2 - Closers</div>';
+  for(var i=0;i<Math.min(3,cls.length);i++) h+='<div class="lr"><div class="rr">'+(i+1)+'</div><div class="ri"><div class="rn">'+esc(cls[i].title)+'</div><div class="rl2">Last used: <strong>'+fmt(cls[i].last_used)+'</strong> &middot; '+ago(cls[i].last_used)+'</div></div><div class="rb">'+esc(cls[i].key||'?')+'</div></div>';
+  document.getElementById('song-sg').innerHTML=h;
+  var all=songs.slice().sort(byD); h='';
+  for(var i=0;i<all.length;i++){
+    var s=all[i];
+    h+='<div class="lr"><div class="ri"><div class="rn">'+esc(s.title)+'<span class="'+(s.role==='opener'?'ro':'rc')+'">'+(s.role==='opener'?'Opener':'Closer')+'</span>'+(s.seasonal?'<span style="font-size:10px;padding:2px 7px;border-radius:8px;background:#e8f5e9;color:#2d7a4f;border:1px solid rgba(45,122,79,0.2);margin-left:4px">Seasonal</span>':'')+'</div><div class="rl2">Last used: <strong>'+fmt(s.last_used)+'</strong> &middot; '+ago(s.last_used)+'</div></div><div class="rb">'+esc(s.key||'?')+'</div></div>';
+  }
+  document.getElementById('song-all').innerHTML=h;
 }
 
-async function deleteSvc(id, e) {
-  e.stopPropagation();
-  if (!confirm('Delete this service?')) return;
-  services = services.filter(function(s) { return s.id !== id; });
-  openRows[id] = false;
-  try { await sb('services', 'DELETE', null, 'id=eq.' + id); } catch(err) { showError(err.message); }
-  renderAll();
-  toast('Deleted');
-}
-
-function renderSongs() {
-  function byDate(a, b) { return new Date(a.last_used||'2000-01-01') - new Date(b.last_used||'2000-01-01'); }
-  var openers = songs.filter(function(s) { return s.role === 'opener' && eligible(s); }).sort(byDate);
-  var closers = songs.filter(function(s) { return s.role === 'closer' && eligible(s); }).sort(byDate);
-  var h = '<div class="list-section">Song 1 \u2014 Openers</div>';
-  h += openers.slice(0,3).map(function(s, i) {
-    return '<div class="list-row"><div class="row-rank">' + (i+1) + '</div><div class="row-info"><div class="row-name">' + esc(s.title) + '</div><div class="row-last">Last used: <strong>' + fmt(s.last_used) + '</strong> \u00b7 ' + ago(s.last_used) + '</div></div><div class="row-badge">' + esc(s.key||'?') + '</div></div>';
-  }).join('');
-  h += '<div class="list-section">Song 2 \u2014 Closers</div>';
-  h += closers.slice(0,3).map(function(s, i) {
-    return '<div class="list-row"><div class="row-rank">' + (i+1) + '</div><div class="row-info"><div class="row-name">' + esc(s.title) + '</div><div class="row-last">Last used: <strong>' + fmt(s.last_used) + '</strong> \u00b7 ' + ago(s.last_used) + '</div></div><div class="row-badge">' + esc(s.key||'?') + '</div></div>';
-  }).join('');
-  document.getElementById('song-suggests').innerHTML = h;
-
-  var allSorted = songs.slice().sort(byDate);
-  document.getElementById('song-list').innerHTML = allSorted.map(function(s) {
-    var roleClass = s.role === 'opener' ? 'role-opener' : 'role-closer';
-    var roleLabel = s.role === 'opener' ? 'Opener' : 'Closer';
-    var seasonal = s.seasonal ? '<span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;background:#e8f5e9;color:#2d7a4f;border:1px solid rgba(45,122,79,0.2);margin-left:4px">Seasonal</span>' : '';
-    return '<div class="list-row"><div class="row-info"><div class="row-name">' + esc(s.title) + '<span class="' + roleClass + '">' + roleLabel + '</span>' + seasonal + '</div><div class="row-last">Last used: <strong>' + fmt(s.last_used) + '</strong> \u00b7 ' + ago(s.last_used) + '</div></div><div class="row-badge">' + esc(s.key||'?') + '</div></div>';
-  }).join('');
-}
-
-async function addSong() {
-  var title = document.getElementById('new-song').value.trim();
-  var key = document.getElementById('new-key').value.trim().toUpperCase();
-  var role = document.getElementById('new-role').value;
-  if (!title) return;
-  var btn = document.getElementById('add-song-btn'); btn.disabled = true;
-  try {
-    var res = await sb('songs', 'POST', {title:title, key:key||'?', role:role, seasonal:false, last_used:null});
+async function addSong(){
+  var t=document.getElementById('ns-tit').value.trim();
+  var k=document.getElementById('ns-key').value.trim().toUpperCase();
+  var r=document.getElementById('ns-rl').value;
+  if(!t) return;
+  try{
+    var res=await db('songs','POST',{title:t,key:k||'?',role:r,seasonal:false,last_used:null});
     songs.push(res[0]);
-    document.getElementById('new-song').value = '';
-    document.getElementById('new-key').value = '';
-    renderSongs(); populateAddForm();
-    toast('"' + title + '" added');
-  } catch(err) { showError(err.message); }
-  btn.disabled = false;
+    document.getElementById('ns-tit').value=''; document.getElementById('ns-key').value='';
+    renderSongs(); populateAdd(); toast('"'+t+'" added');
+  }catch(err){showErr(err.message);}
 }
 
-function renderPads() {
-  var sorted = pads.slice().sort(function(a,b) { return new Date(a.last_used||'2000-01-01') - new Date(b.last_used||'2000-01-01'); });
-  document.getElementById('pad-suggests').innerHTML = sorted.slice(0,5).map(function(p, i) {
-    return '<div class="list-row"><div class="row-rank">' + (i+1) + '</div><div class="pad-dot" style="background:' + padColor(p.name) + '"></div><div class="row-info"><div class="row-name">' + esc(p.name) + '</div><div class="row-last">Last used: <strong>' + fmt(p.last_used) + '</strong> \u00b7 ' + ago(p.last_used) + '</div></div></div>';
-  }).join('');
-  document.getElementById('pad-list').innerHTML = sorted.map(function(p) {
-    return '<div class="list-row"><div class="pad-dot" style="background:' + padColor(p.name) + '"></div><div class="row-info"><div class="row-name">' + esc(p.name) + '</div><div class="row-last">Last used: <strong>' + fmt(p.last_used) + '</strong> \u00b7 ' + ago(p.last_used) + '</div></div></div>';
-  }).join('');
+function renderPads(){
+  var s=pads.slice().sort(byD);
+  var h=''; for(var i=0;i<Math.min(5,s.length);i++) h+='<div class="lr"><div class="rr">'+(i+1)+'</div><div class="pd" style="background:'+padCol(s[i].name)+'"></div><div class="ri"><div class="rn">'+esc(s[i].name)+'</div><div class="rl2">Last used: <strong>'+fmt(s[i].last_used)+'</strong> &middot; '+ago(s[i].last_used)+'</div></div></div>';
+  document.getElementById('pad-sg').innerHTML=h;
+  h=''; for(var i=0;i<s.length;i++) h+='<div class="lr"><div class="pd" style="background:'+padCol(s[i].name)+'"></div><div class="ri"><div class="rn">'+esc(s[i].name)+'</div><div class="rl2">Last used: <strong>'+fmt(s[i].last_used)+'</strong> &middot; '+ago(s[i].last_used)+'</div></div></div>';
+  document.getElementById('pad-all').innerHTML=h;
 }
 
-async function addPad() {
-  var name = document.getElementById('new-pad').value.trim();
-  if (!name) return;
-  var btn = document.getElementById('add-pad-btn'); btn.disabled = true;
-  try {
-    var res = await sb('pads', 'POST', {name:name, last_used:null});
-    pads.push(res[0]);
-    document.getElementById('new-pad').value = '';
-    renderPads(); populateAddForm();
-    toast('"' + name + '" added');
-  } catch(err) { showError(err.message); }
-  btn.disabled = false;
+async function addPad(){
+  var n=document.getElementById('ns-pn').value.trim(); if(!n) return;
+  try{
+    var res=await db('pads','POST',{name:n,last_used:null});
+    pads.push(res[0]); document.getElementById('ns-pn').value='';
+    renderPads(); populateAdd(); toast('"'+n+'" added');
+  }catch(err){showErr(err.message);}
 }
 
-function renderOutfits() {
-  var sorted = outfits.slice().sort(function(a, b) {
-    if (!a.last_used && !b.last_used) return 0;
-    if (!a.last_used) return -1;
-    if (!b.last_used) return 1;
-    return new Date(a.last_used) - new Date(b.last_used);
-  });
-  function cnt(n) { return services.filter(function(s) { return s.outfit === n; }).length; }
-  document.getElementById('outfit-grid').innerHTML = sorted.map(function(o) {
-    return '<div class="outfit-card"><div class="outfit-swatches">' + (o.colors||[]).map(function(c) { return '<div class="outfit-swatch" style="background:' + c + '"></div>'; }).join('') + '</div><div class="outfit-name">' + esc(o.name) + '</div><div class="outfit-meta">' + (o.last_used ? 'Last: <strong>' + fmt(o.last_used) + '</strong> \u00b7 ' + ago(o.last_used) : '<span style="color:var(--ink3)">Not tracked yet</span>') + '</div><div class="outfit-meta" style="margin-top:2px">Used ' + cnt(o.name) + '\u00d7</div></div>';
-  }).join('');
+function renderOutfits(){
+  var s=outfits.slice().sort(byDO);
+  function cnt(n){var c=0;for(var i=0;i<svcs.length;i++)if(svcs[i].outfit===n)c++;return c;}
+  var h=''; for(var i=0;i<s.length;i++){
+    var o=s[i]; var cols=o.colors||[];
+    h+='<div class="oc"><div class="osw">';
+    for(var j=0;j<cols.length;j++) h+='<div style="background:'+cols[j]+'"></div>';
+    h+='</div><div class="on2">'+esc(o.name)+'</div>';
+    h+='<div class="om">'+(o.last_used?'Last: <strong>'+fmt(o.last_used)+'</strong> &middot; '+ago(o.last_used):'Not tracked yet')+'</div>';
+    h+='<div class="om" style="margin-top:2px">Used '+cnt(o.name)+'x</div></div>';
+  }
+  document.getElementById('out-grid').innerHTML=h;
 }
 
-async function addOutfit() {
-  var name = document.getElementById('no-name').value.trim();
-  if (!name) return;
-  var nc = parseInt(document.getElementById('no-nc').value);
-  var colors = [document.getElementById('no-c1').value];
-  if (nc >= 2) colors.push(document.getElementById('no-c2').value);
-  if (nc >= 3) colors.push(document.getElementById('no-c3').value);
-  var btn = document.getElementById('add-outfit-btn'); btn.disabled = true;
-  try {
-    var res = await sb('outfits', 'POST', {name:name, colors:colors, last_used:null});
-    outfits.push(res[0]);
-    document.getElementById('no-name').value = '';
-    renderOutfits(); populateAddForm();
-    toast('"' + name + '" added');
-  } catch(err) { showError(err.message); }
-  btn.disabled = false;
+async function addOutfit(){
+  var name=document.getElementById('ns-on').value.trim(); if(!name) return;
+  var nc=parseInt(document.getElementById('ns-nc').value);
+  var colors=[document.getElementById('ns-c1').value];
+  if(nc>=2) colors.push(document.getElementById('ns-c2').value);
+  if(nc>=3) colors.push(document.getElementById('ns-c3').value);
+  try{
+    var res=await db('outfits','POST',{name:name,colors:colors,last_used:null});
+    outfits.push(res[0]); document.getElementById('ns-on').value='';
+    renderOutfits(); populateAdd(); toast('"'+name+'" added');
+  }catch(err){showErr(err.message);}
 }
 
-function renderPrayers() {
-  var sorted = prayers.slice().sort(function(a,b) { return a.sort_order - b.sort_order; });
-  document.getElementById('prayer-list').innerHTML = sorted.map(function(p, i) {
-    return '<div class="list-row"><div class="row-rank">' + (i+1) + '</div><div class="row-info"><div class="row-name">' + esc(p.topic) + '</div><div class="row-last">Last used: <strong>' + (p.last_used ? fmt(p.last_used) : 'never') + '</strong>' + (p.last_used ? ' \u00b7 ' + ago(p.last_used) : '') + '</div></div></div>';
-  }).join('');
+function renderPrayers(){
+  var s=prayers.slice().sort(function(a,b){return a.sort_order-b.sort_order;});
+  var h=''; for(var i=0;i<s.length;i++) h+='<div class="lr"><div class="rr">'+(i+1)+'</div><div class="ri"><div class="rn">'+esc(s[i].topic)+'</div><div class="rl2">Last used: <strong>'+(s[i].last_used?fmt(s[i].last_used):'never')+'</strong>'+(s[i].last_used?' &middot; '+ago(s[i].last_used):'')+'</div></div></div>';
+  document.getElementById('pr-list').innerHTML=h;
 }
 
-async function addPrayer() {
-  var topic = document.getElementById('new-prayer').value.trim();
-  if (!topic) return;
-  var maxOrder = prayers.reduce(function(m,p) { return Math.max(m, p.sort_order); }, 0);
-  var btn = document.getElementById('add-prayer-btn'); btn.disabled = true;
-  try {
-    var res = await sb('prayers', 'POST', {topic:topic, sort_order:maxOrder+1, last_used:null});
-    prayers.push(res[0]);
-    document.getElementById('new-prayer').value = '';
-    renderPrayers(); renderPrayerBanner(); renderTWBanner();
-    toast('"' + topic + '" added');
-  } catch(err) { showError(err.message); }
-  btn.disabled = false;
+async function addPrayer(){
+  var t=document.getElementById('ns-pt').value.trim(); if(!t) return;
+  var max=0; for(var i=0;i<prayers.length;i++) if(prayers[i].sort_order>max) max=prayers[i].sort_order;
+  try{
+    var res=await db('prayers','POST',{topic:t,sort_order:max+1,last_used:null});
+    prayers.push(res[0]); document.getElementById('ns-pt').value='';
+    renderPrayers(); renderPB(); renderTW(); toast('"'+t+'" added');
+  }catch(err){showErr(err.message);}
 }
 
-async function markPrayerDone() {
-  var nextP = getNextPrayer();
-  if (!nextP) return;
-  nextP.last_used = today();
-  try {
-    await sb('prayers', 'PATCH', {last_used:today()}, 'id=eq.' + nextP.id);
-    renderPrayerBanner(); renderTWBanner(); renderPrayers();
-    toast('Prayer updated \u2014 ' + nextP.topic);
-  } catch(err) { showError(err.message); }
+async function markPrayer(){
+  var np=nextPrayer(); if(!np) return;
+  np.last_used=td();
+  try{await db('prayers','PATCH',{last_used:td()},'id=eq.'+np.id);}catch(err){showErr(err.message);return;}
+  renderPB(); renderTW(); renderPrayers(); toast('Prayer updated');
 }
 
-function populateAddForm() {
-  document.getElementById('ns-date').value = today();
-  document.getElementById('ns-s1').innerHTML = songOpts('', 'opener');
-  document.getElementById('ns-s2').innerHTML = songOpts('', 'closer');
-  document.getElementById('ns-pad').innerHTML = padOpts('');
-  document.getElementById('ns-outfit').innerHTML = outfitOpts('');
-  document.getElementById('ns-prayer').innerHTML = prayerOpts('');
+function populateAdd(){
+  document.getElementById('ns-dt').value=td();
+  document.getElementById('ns-s1').innerHTML=sopts('','opener');
+  document.getElementById('ns-s2').innerHTML=sopts('','closer');
+  document.getElementById('ns-pd').innerHTML=pOpts('');
+  document.getElementById('ns-ot').innerHTML=oOpts('');
+  document.getElementById('ns-pr').innerHTML=prOpts('');
 }
 
-async function saveService() {
-  var date = document.getElementById('ns-date').value;
-  if (!date) { toast('Please pick a date'); return; }
-  var np = getNextPrayer();
-  var svc = {
-    date: date,
-    title: document.getElementById('ns-title').value.trim(),
-    song1: document.getElementById('ns-s1').value,
-    song2: document.getElementById('ns-s2').value,
-    pad: document.getElementById('ns-pad').value,
-    outfit: document.getElementById('ns-outfit').value,
-    status: document.getElementById('ns-status').value,
-    prayer: document.getElementById('ns-prayer').value || (np ? np.topic : '')
-  };
-  var btn = document.getElementById('save-svc-btn'); btn.disabled = true;
-  try {
-    if (svc.status === 'confirmed') {
-      var updates = [];
-      if (svc.song1) { var s = getSong(svc.song1); if (s) { s.last_used = date; updates.push(sb('songs','PATCH',{last_used:date},'id=eq.'+s.id)); } }
-      if (svc.song2) { var s2 = getSong(svc.song2); if (s2) { s2.last_used = date; updates.push(sb('songs','PATCH',{last_used:date},'id=eq.'+s2.id)); } }
-      if (svc.pad) { var p = getPad(svc.pad); if (p) { p.last_used = date; updates.push(sb('pads','PATCH',{last_used:date},'id=eq.'+p.id)); } }
-      if (svc.outfit) { var o = getOutfit(svc.outfit); if (o) { o.last_used = date; updates.push(sb('outfits','PATCH',{last_used:date},'id=eq.'+o.id)); } }
-      if (updates.length) await Promise.all(updates);
+async function saveSvc(){
+  var date=document.getElementById('ns-dt').value;
+  if(!date){toast('Please pick a date');return;}
+  var np=nextPrayer();
+  var svc={date:date,title:document.getElementById('ns-ti').value.trim(),song1:document.getElementById('ns-s1').value,song2:document.getElementById('ns-s2').value,pad:document.getElementById('ns-pd').value,outfit:document.getElementById('ns-ot').value,status:document.getElementById('ns-st').value,prayer:document.getElementById('ns-pr').value||(np?np.topic:'')};
+  try{
+    if(svc.status==='confirmed'){
+      var ps=[];
+      var s1=gS(svc.song1);if(s1){s1.last_used=date;ps.push(db('songs','PATCH',{last_used:date},'id=eq.'+s1.id));}
+      var s2=gS(svc.song2);if(s2){s2.last_used=date;ps.push(db('songs','PATCH',{last_used:date},'id=eq.'+s2.id));}
+      var p=gP(svc.pad);if(p){p.last_used=date;ps.push(db('pads','PATCH',{last_used:date},'id=eq.'+p.id));}
+      var o=gO(svc.outfit);if(o){o.last_used=date;ps.push(db('outfits','PATCH',{last_used:date},'id=eq.'+o.id));}
+      if(ps.length) await Promise.all(ps);
     }
-    var res = await sb('services', 'POST', svc);
-    services.push(res[0]);
-    services.sort(function(a,b) { return a.date.localeCompare(b.date); });
-    document.getElementById('ns-title').value = '';
-    toast('Service saved');
-    showPage('planner', document.getElementById('nav-planner'));
-    renderAll();
-  } catch(err) { showError(err.message); }
-  btn.disabled = false;
+    var res=await db('services','POST',svc);
+    svcs.push(res[0]); svcs.sort(function(a,b){return a.date.localeCompare(b.date);});
+    document.getElementById('ns-ti').value='';
+    toast('Service saved'); go('planner',document.getElementById('nb-planner')); renderAll();
+  }catch(err){showErr(err.message);}
 }
 
-var PAGE_SUBS = {planner:'Planner', add:'Add Service', songs:'Songs', pads:'Pads', outfits:'Outfits', prayers:'Prayers'};
-function showPage(id, btn) {
-  document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
-  document.querySelectorAll('.nav-btn').forEach(function(n) { n.classList.remove('active'); });
-  document.getElementById('page-' + id).classList.add('active');
-  btn.classList.add('active');
-  document.getElementById('page-sub').textContent = PAGE_SUBS[id] || id;
-  if (id === 'add') populateAddForm();
+var PSUBS={planner:'Planner',add:'Add Service',songs:'Songs',pads:'Pads',outfits:'Outfits',prayers:'Prayers'};
+function go(id,btn){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on');});
+  document.querySelectorAll('.nb').forEach(function(n){n.classList.remove('on');});
+  document.getElementById('pg-'+id).classList.add('on');
+  btn.classList.add('on');
+  document.getElementById('ps').textContent=PSUBS[id]||id;
+  if(id==='add') populateAdd();
 }
 
-function renderAll() {
-  renderTopbar(); renderStats(); renderTWBanner(); renderPrayerBanner();
+function renderAll(){
+  renderTopbar(); renderStats(); renderTW(); renderPB();
   renderTable(); renderSongs(); renderPads(); renderOutfits(); renderPrayers();
 }
 
-async function init() {
-  try {
-    var results = await Promise.all([
-      sb('songs', 'GET', null, 'order=last_used.asc.nullsfirst'),
-      sb('pads', 'GET', null, 'order=last_used.asc.nullsfirst'),
-      sb('outfits', 'GET', null, 'order=last_used.asc.nullsfirst'),
-      sb('services', 'GET', null, 'order=date.asc'),
-      sb('prayers', 'GET', null, 'order=sort_order.asc')
-    ]);
-    songs = results[0]; pads = results[1]; outfits = results[2];
-    services = results[3]; prayers = results[4];
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('app').style.display = 'flex';
-    renderAll();
-  } catch(err) {
-    document.getElementById('loading').innerHTML = '<div style="text-align:center;padding:40px;color:#c0392b"><div style="font-size:16px;font-weight:600;margin-bottom:8px">Failed to connect</div><div style="font-size:13px;color:#888">' + err.message + '</div></div>';
-  }
-}
-
-init();
-
-document.addEventListener('click', function(e) {
-  if (e.target.classList.contains('skip-btn')) {
-    var type = e.target.dataset.type;
-    var val = e.target.dataset.val;
-    skipItem(type, val);
+// Skip button event delegation  -  single listener on document
+document.addEventListener('click',function(e){
+  var btn=e.target;
+  if(btn.classList.contains('skip')){
+    e.stopPropagation();
+    skipItem(btn.getAttribute('data-t'),btn.getAttribute('data-v'));
   }
 });
+
+async function init(){
+  try{
+    var r=await Promise.all([
+      db('songs','GET',null,'order=last_used.asc.nullsfirst'),
+      db('pads','GET',null,'order=last_used.asc.nullsfirst'),
+      db('outfits','GET',null,'order=last_used.asc.nullsfirst'),
+      db('services','GET',null,'order=date.asc'),
+      db('prayers','GET',null,'order=sort_order.asc')
+    ]);
+    songs=r[0];pads=r[1];outfits=r[2];svcs=r[3];prayers=r[4];
+    document.getElementById('loader').style.display='none';
+    document.getElementById('app').style.display='flex';
+    renderAll();
+  }catch(err){
+    document.getElementById('loader').innerHTML='<div style="text-align:center;padding:40px;color:#c0392b"><div style="font-size:16px;font-weight:600;margin-bottom:8px">Failed to connect</div><div style="font-size:13px;color:#888">'+err.message+'</div></div>';
+  }
+}
+init();
 </script>
 </body>
 </html>
