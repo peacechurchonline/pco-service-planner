@@ -680,7 +680,12 @@ async function saveEdit(id,e){
   var svc=null; for(var i=0;i<svcs.length;i++) if(svcs[i].id===id){svc=svcs[i];break;}
   if(!svc) return;
   var patch={title:svc.title,song1:svc.song1,song2:svc.song2,pad:svc.pad,outfit:svc.outfit,prayer:svc.prayer};
-  try{await db('services','PATCH',patch,'id=eq.'+id);}catch(err){showErr(err.message);return;}
+  var ps=[db('services','PATCH',patch,'id=eq.'+id)];
+  if(svc.song1){var s1=gS(svc.song1);if(s1){s1.last_used=svc.date;ps.push(db('songs','PATCH',{last_used:svc.date},'id=eq.'+s1.id));}}
+  if(svc.song2){var s2=gS(svc.song2);if(s2){s2.last_used=svc.date;ps.push(db('songs','PATCH',{last_used:svc.date},'id=eq.'+s2.id));}}
+  if(svc.pad){var p=gP(svc.pad);if(p){p.last_used=svc.date;ps.push(db('pads','PATCH',{last_used:svc.date},'id=eq.'+p.id));}}
+  if(svc.outfit){var o=gO(svc.outfit);if(o){o.last_used=svc.date;ps.push(db('outfits','PATCH',{last_used:svc.date},'id=eq.'+o.id));}}
+  try{await Promise.all(ps);}catch(err){showErr(err.message);return;}
   editR[id]=false; renderAll(); toast('Saved');
 }
 
